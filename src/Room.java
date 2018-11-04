@@ -23,6 +23,10 @@ public class Room {
 		this.price = price;
 	}
 	
+	public boolean isEqual(Room r){
+		return (this.room_number == r.room_number && this.price == r.price) ? true : false;
+	}
+	
 	public String toString(){
 		return room_number + " " + price;
 	}

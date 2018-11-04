@@ -11,14 +11,15 @@ public class HotelReservationSystem {
 	private static HashMap<String, Guest> guests = new HashMap<String, Guest>(); // hold existing guest info from guests.txt
 	private static ArrayList<Reservation> all_reservations = new ArrayList<Reservation>(); // hold all reservations from reservations.txt
     private static ArrayList<Room> rooms = new ArrayList<Room>(); // hold all general rooms info from rooms.txt
-    private static ArrayList<Room> type1Rooms = new ArrayList<Room>();
-    private static ArrayList<Room> type2Rooms = new ArrayList<Room>();
-    private static ArrayList<Room> type3Rooms = new ArrayList<Room>();
+    private static HashMap<Integer, ArrayList<Room>> catagorizedRooms =
+    		new HashMap<Integer, ArrayList<Room>>();
+    private static String currentUser; // keep track of which user is using the program
     
 	public static void main(String[] args) throws FileNotFoundException{
 		loadData("guests.txt", 1);
 		loadData("rooms.txt", 2);
 		loadData("reservations.txt", 3);
+		
 		
 		/* TEST CODE FOR LOADING DATA 
         System.out.println(guests.get("ngannguyen2").toString());
@@ -35,16 +36,16 @@ public class HotelReservationSystem {
 		ReservationsByRoomPanel reservationsByRoomPanel = new ReservationsByRoomPanel(reservationsByRoomModel, rooms);
 		reservationsByRoomModel.addChangeListener(reservationsByRoomPanel);
 		
-		//BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(all_reservations);
-		//BookedRoomsByDatesPanel bookedRoomsByDatesPanel = new BookedRoomsByDatesPanel(bookedRoomsByDatesModel, rooms);
-		//reservationsByRoomModel.addChangeListener(reservationsByRoomPanel);
+		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(all_reservations, catagorizedRooms);
+		GetBookingInfoPanel getBookingInfoPanel = new GetBookingInfoPanel(bookedRoomsByDatesModel);
+		bookedRoomsByDatesModel.addChangeListener(getBookingInfoPanel);
 		
 		JFrame frame = new JFrame("Hotel SEN");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(700, 500);
 		
-		frame.add(reservationsByRoomPanel);
-		//frame.add(bookedRoomsByDatesPanel);
+		//frame.add(reservationsByRoomPanel);
+		frame.add(getBookingInfoPanel);
 		
 		frame.setVisible(true);
     }
@@ -70,6 +71,10 @@ public class HotelReservationSystem {
 			break;
 		case 2:
 			/* LOAD ROOMS INFO */
+			ArrayList<Room> type1Rooms = new ArrayList<Room>();
+		    ArrayList<Room> type2Rooms = new ArrayList<Room>();
+		    ArrayList<Room> type3Rooms = new ArrayList<Room>();
+		    
 			while(fin.hasNextLine()){
 				String[] roomInfo = fin.nextLine().split(" ");
 				int room_number = Integer.parseInt(roomInfo[0]);
@@ -83,6 +88,10 @@ public class HotelReservationSystem {
 				else
 					type3Rooms.add(room);
 			}
+			
+			catagorizedRooms.put(100, type1Rooms);
+			catagorizedRooms.put(200, type2Rooms);
+			catagorizedRooms.put(300, type3Rooms);
 			break;
 		case 3:
 			/* LOAD RESERVATIONS INFO */
@@ -102,7 +111,9 @@ public class HotelReservationSystem {
 						Integer.parseInt(date[0]), Integer.parseInt(date[1]));
 				DateInterval dateInterval = new DateInterval(start_date, end_date);
 				
-				all_reservations.add(new Reservation(str[0], Integer.parseInt(str[1]), 
+				int room_number = Integer.parseInt(str[1]);
+				
+				all_reservations.add(new Reservation(str[0], getRoom(room_number), 
 						dateInterval, Integer.parseInt(str[4]), bookingDate));
 			} 
 			break;
@@ -111,5 +122,14 @@ public class HotelReservationSystem {
 		fin.close();
 	}
 	
-	
+	private static Room getRoom(int room_number){
+		Room theRoom = null;
+		for(Room r : rooms){
+			if(r.getRoom_number() == room_number){
+				theRoom = r;
+				break;
+			}
+		}
+		return theRoom;
+	}
 }
