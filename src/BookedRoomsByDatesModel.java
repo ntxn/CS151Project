@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -12,14 +13,17 @@ public class BookedRoomsByDatesModel {
 	private DateInterval dateInterval;
 	private Hashtable catagorizedRooms;
 	private int roomType;
+	private Guest currentGuest;
+	private Hashtable rooms;
 	
 	public BookedRoomsByDatesModel(ArrayList<Reservation> all_reservations,
-			Hashtable catagorizedRooms){
+			Hashtable catagorizedRooms, Guest currentGuest, Hashtable rooms){
 		listeners = new ArrayList<ChangeListener>();
 		this.all_reservations = all_reservations;
 		availableRoomsByType = new ArrayList<Integer>();
-		allRoomsByType = new ArrayList<Room>();
 		this.catagorizedRooms = catagorizedRooms;
+		this.currentGuest = currentGuest;
+		this.rooms = rooms;
 	}
 
 	// Attach listener
@@ -31,6 +35,7 @@ public class BookedRoomsByDatesModel {
 	public ArrayList<Integer> getAvailableRoomsByType(){
 		return availableRoomsByType;
 	}
+	
 	
 	
 	// Mutator
@@ -56,9 +61,19 @@ public class BookedRoomsByDatesModel {
 		
 		// Notify observers of the change
 		ChangeEvent event = new ChangeEvent(this);
-		for(ChangeListener listener : listeners){
+		/*for(ChangeListener listener : listeners){
 			listener.stateChanged(event);
-		}
+		}*/
+		listeners.get(0).stateChanged(event);
+	}
+	
+	public void getBookingConfirmation(int room_number){
+		// Create a reservation & add it to the all_reservations variable
+		Reservation r = new Reservation(currentGuest.username, (Room)rooms.get(room_number), dateInterval, 
+				dateInterval.getNumberOfDays(), LocalDate.now());
+		all_reservations.add(r);
+		ChangeEvent event = new ChangeEvent(this);
+		listeners.get(1).stateChanged(event);
 	}
 	
 	public String toString(){

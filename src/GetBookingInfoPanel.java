@@ -21,15 +21,15 @@ public class GetBookingInfoPanel extends JPanel implements ChangeListener{
 	private BookedRoomsByDatesModel dataModel;
 	private int roomType;
 	private JTextArea availableRoomTextArea;
-	ArrayList<Integer> availableRooms;
+	private ArrayList<Integer> availableRooms;
 	private static final int NUMBER_OF_ROOM_TYPE = 3;
 	
 	public GetBookingInfoPanel(BookedRoomsByDatesModel dataModel){
 		this.dataModel = dataModel;
 		availableRooms = new ArrayList<Integer>();
-		availableRoomTextArea = new JTextArea(200,200);
+		availableRoomTextArea = new JTextArea(5, 5);
 		
-		setSize(700, 500);
+		//setSize(700, 500);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		JTextField start_date_txtField = new JTextField("Check in");
@@ -59,9 +59,7 @@ public class GetBookingInfoPanel extends JPanel implements ChangeListener{
 				
 			}
 		});
-		
-		
-		
+			
 		add(start_date_txtField);
 		add(end_date_txtField);
 		add(roomTypeButtonsPanel);

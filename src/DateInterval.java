@@ -1,3 +1,4 @@
+import java.time.Duration;
 import java.time.LocalDate;
 
 public class DateInterval {
@@ -31,6 +32,11 @@ public class DateInterval {
 				return false;
 		 
 		return true;		
+	}
+	
+	public int getNumberOfDays(){
+		return (int)Duration.between(start_date.atStartOfDay(), 
+				end_date.atStartOfDay()).toDays();
 	}
 	
 	public String toString(){

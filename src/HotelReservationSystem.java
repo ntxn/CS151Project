@@ -8,18 +8,18 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 public class HotelReservationSystem {
-	private static HashMap<String, Guest> guests = new HashMap<String, Guest>(); // hold existing guest info from guests.txt
+	private static Hashtable guests = new Hashtable(); // hold existing guest info from guests.txt
 	private static ArrayList<Reservation> all_reservations = new ArrayList<Reservation>(); // hold all reservations from reservations.txt
     private static ArrayList<Room> rooms = new ArrayList<Room>(); // hold all general rooms info from rooms.txt
+    private static Hashtable rooms2 = new Hashtable();
     private static Hashtable catagorizedRooms = new Hashtable();
-    private static String currentUser; // keep track of which user is using the program
+    private static Guest currentUser; // keep track of which user is using the program
     
 	public static void main(String[] args) throws FileNotFoundException{
 		loadData("guests.txt", 1);
 		loadData("rooms.txt", 2);
 		loadData("reservations.txt", 3);
-		
-		
+		currentUser = (Guest) guests.get("ngannguyen");		
 		/* TEST CODE FOR LOADING DATA 
         System.out.println(guests.get("ngannguyen2").toString());
 		
@@ -35,16 +35,23 @@ public class HotelReservationSystem {
 		ReservationsByRoomPanel reservationsByRoomPanel = new ReservationsByRoomPanel(reservationsByRoomModel, rooms);
 		reservationsByRoomModel.addChangeListener(reservationsByRoomPanel);
 		
-		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(all_reservations, catagorizedRooms);
+		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(all_reservations, catagorizedRooms, currentUser, rooms2);
 		GetBookingInfoPanel getBookingInfoPanel = new GetBookingInfoPanel(bookedRoomsByDatesModel);
+		GetConfirmationPanel getConfirmationPanel = new GetConfirmationPanel(bookedRoomsByDatesModel, all_reservations);
 		bookedRoomsByDatesModel.addChangeListener(getBookingInfoPanel);
+		bookedRoomsByDatesModel.addChangeListener(getConfirmationPanel);
+		
+		JPanel bookingPanel = new JPanel();
+		bookingPanel.setLayout(new BorderLayout());
+		bookingPanel.add(getBookingInfoPanel, BorderLayout.NORTH);
+		bookingPanel.add(getConfirmationPanel, BorderLayout.CENTER);
 		
 		JFrame frame = new JFrame("Hotel SEN");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(700, 500);
 		
 		//frame.add(reservationsByRoomPanel);
-		frame.add(getBookingInfoPanel);
+		frame.add(bookingPanel);
 		
 		frame.setVisible(true);
     }
@@ -80,6 +87,9 @@ public class HotelReservationSystem {
 				int price = Integer.parseInt(roomInfo[1]);
 				Room room = new Room(room_number, price);
 				rooms.add(room);
+				
+				rooms2.put(room_number, room);
+				
 				if(price == 100)
 					type1Rooms.add(room);
 				else if(price == 200)
