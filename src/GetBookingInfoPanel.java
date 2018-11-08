@@ -55,7 +55,7 @@ public class GetBookingInfoPanel extends JPanel implements ChangeListener{
 				start_date = convertToDate(start_date_txtField);
 				end_date = convertToDate(end_date_txtField);
 				DateInterval dateInterval = new DateInterval(start_date, end_date);
-				dataModel.checkAvailableRooms(dateInterval, roomType);
+				dataModel.getAvailableRooms(dateInterval, roomType);
 				
 			}
 		});

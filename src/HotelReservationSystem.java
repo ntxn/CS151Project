@@ -11,8 +11,7 @@ public class HotelReservationSystem {
 	private static HashMap<String, Guest> guests = new HashMap<String, Guest>(); // hold existing guest info from guests.txt
 	private static ArrayList<Reservation> all_reservations = new ArrayList<Reservation>(); // hold all reservations from reservations.txt
     private static ArrayList<Room> rooms = new ArrayList<Room>(); // hold all general rooms info from rooms.txt
-    private static HashMap<Integer, ArrayList<Room>> catagorizedRooms =
-    		new HashMap<Integer, ArrayList<Room>>();
+    private static Hashtable catagorizedRooms = new Hashtable();
     private static String currentUser; // keep track of which user is using the program
     
 	public static void main(String[] args) throws FileNotFoundException{
