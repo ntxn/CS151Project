@@ -28,8 +28,9 @@ public class DateInterval {
 		   duration.end_date.equals(this.start_date) ||
 		   duration.start_date.isAfter(this.end_date) ||
 		   duration.start_date.equals(this.end_date))
-				return true;
-		return false;		
+				return false;
+		 
+		return true;		
 	}
 	
 	public String toString(){

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 import javax.swing.event.*;
 
@@ -16,7 +17,7 @@ public class BookedRoomsByDatesModel {
 			HashMap<Integer, ArrayList<Room>> catagorizedRooms){
 		listeners = new ArrayList<ChangeListener>();
 		this.all_reservations = all_reservations;
-		availableRoomsByType = new ArrayList<Integer>();
+		
 		allRoomsByType = new ArrayList<Room>();
 		this.catagorizedRooms = catagorizedRooms;
 	}
@@ -37,24 +38,22 @@ public class BookedRoomsByDatesModel {
 		this.dateInterval = dateInterval;
 		this.roomType = roomType;
 		Reservation reservation;
-		ArrayList<Room> bookedRoom = new ArrayList<Room>();
+		availableRoomsByType = new ArrayList<Integer>();
+		Hashtable bookedRoom = new Hashtable();
 		
-		// it doesn't get the right room
 		for(int i=0; i<all_reservations.size(); i++){
 			reservation = all_reservations.get(i);
-			if(!reservation.getDateInterval().isConflicting(this.dateInterval))
-				bookedRoom.add(reservation.getRoom());
+			if(reservation.getDateInterval().isConflicting(this.dateInterval))
+				if(reservation.getRoom().getPrice() == roomType)
+					bookedRoom.put(reservation.getRoom(), roomType); 
 		}
 		
 		allRoomsByType = catagorizedRooms.get(roomType);
-		for(int i=0; i<allRoomsByType.size(); i++){System.out.println(allRoomsByType.get(i).getPrice());
-			for(int j=0; j<bookedRoom.size(); j++){
-				if(allRoomsByType.get(i).isEqual(bookedRoom.get(j)))
-					availableRoomsByType.add(allRoomsByType.get(i).getRoom_number());
-			}
-			
+		for(int i=0; i<allRoomsByType.size(); i++){
+			if(!bookedRoom.contains(allRoomsByType.get(i)))
+				availableRoomsByType.add(allRoomsByType.get(i).getRoom_number());
 		}
-		System.out.println(availableRoomsByType.size());
+		
 		// Notify observers of the change
 		ChangeEvent event = new ChangeEvent(this);
 		for(ChangeListener listener : listeners){
