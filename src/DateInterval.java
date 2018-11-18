@@ -1,5 +1,8 @@
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class DateInterval {
 	private LocalDate start_date;
@@ -40,6 +43,8 @@ public class DateInterval {
 	}
 	
 	public String toString(){
-		return start_date + " - " + end_date;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy");
+		return formatter.format(start_date) + " - " 
+				+ formatter.format(end_date);
 	}
 }

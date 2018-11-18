@@ -30,28 +30,41 @@ public class HotelReservationSystem {
         	System.out.println(r.toString());
         */
 		
-		
+	//MVC - VIEW RESERVATION BY ROOM	
 		ReservationsByRoomModel reservationsByRoomModel = new ReservationsByRoomModel(all_reservations);
 		ReservationsByRoomPanel reservationsByRoomPanel = new ReservationsByRoomPanel(reservationsByRoomModel, rooms);
 		reservationsByRoomModel.addChangeListener(reservationsByRoomPanel);
 		
+	//MVC - MAKING A RESERVATION	
 		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(all_reservations, catagorizedRooms, currentUser, rooms2);
 		GetBookingInfoPanel getBookingInfoPanel = new GetBookingInfoPanel(bookedRoomsByDatesModel);
-		GetConfirmationPanel getConfirmationPanel = new GetConfirmationPanel(bookedRoomsByDatesModel, all_reservations);
+		GetConfirmationPanel getConfirmationPanel = new GetConfirmationPanel(bookedRoomsByDatesModel);
 		bookedRoomsByDatesModel.addChangeListener(getBookingInfoPanel);
 		bookedRoomsByDatesModel.addChangeListener(getConfirmationPanel);
-		
+		JButton moreReservation = new JButton("More Reservation");
+		moreReservation.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				bookedRoomsByDatesModel.resetFields();
+				getBookingInfoPanel.resetFields();
+				getConfirmationPanel.resetFields();
+			}
+		});
+		JButton doneButton = new JButton("Done");
+		JPanel endReservationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		endReservationPanel.add(moreReservation);
+		endReservationPanel.add(doneButton);
 		JPanel bookingPanel = new JPanel();
 		bookingPanel.setLayout(new BorderLayout());
 		bookingPanel.add(getBookingInfoPanel, BorderLayout.NORTH);
 		bookingPanel.add(getConfirmationPanel, BorderLayout.CENTER);
+		bookingPanel.add(endReservationPanel, BorderLayout.SOUTH);
 		
 		JFrame frame = new JFrame("Hotel SEN");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(700, 500);
 		
-		//frame.add(reservationsByRoomPanel);
-		frame.add(bookingPanel);
+		frame.add(reservationsByRoomPanel);
+		//frame.add(bookingPanel);
 		
 		frame.setVisible(true);
     }
@@ -122,7 +135,7 @@ public class HotelReservationSystem {
 				
 				int room_number = Integer.parseInt(str[1]);
 				
-				all_reservations.add(new Reservation(str[0], getRoom(room_number), 
+				all_reservations.add(new Reservation((Guest)guests.get(str[0]), getRoom(room_number), 
 						dateInterval, Integer.parseInt(str[4]), bookingDate));
 			} 
 			break;

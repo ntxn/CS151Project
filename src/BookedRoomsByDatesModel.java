@@ -8,18 +8,22 @@ import javax.swing.event.*;
 public class BookedRoomsByDatesModel {
 	private ArrayList<ChangeListener> listeners;		// Data structure to hold listeners
 	private ArrayList<Reservation> all_reservations;
+	private Hashtable rooms;
+	private Guest currentGuest;
 	private ArrayList<Room> allRoomsByType; 			// Data structure to hold data
 	private ArrayList<Integer> availableRoomsByType;
 	private DateInterval dateInterval;
 	private Hashtable catagorizedRooms;
 	private int roomType;
-	private Guest currentGuest;
-	private Hashtable rooms;
+	
+	
+	private int charge;
 	
 	public BookedRoomsByDatesModel(ArrayList<Reservation> all_reservations,
 			Hashtable catagorizedRooms, Guest currentGuest, Hashtable rooms){
 		listeners = new ArrayList<ChangeListener>();
 		this.all_reservations = all_reservations;
+		allRoomsByType = new ArrayList<Room>();
 		availableRoomsByType = new ArrayList<Integer>();
 		this.catagorizedRooms = catagorizedRooms;
 		this.currentGuest = currentGuest;
@@ -53,7 +57,6 @@ public class BookedRoomsByDatesModel {
 					bookedRoom.put(reservation.getRoom().getRoom_number(), roomType); 
 		}
 		
-		System.out.println(bookedRoom.size());
 		allRoomsByType = (ArrayList<Room>) catagorizedRooms.get(roomType);
 		for(int i=0; i<allRoomsByType.size(); i++)
 			if(!bookedRoom.containsKey(allRoomsByType.get(i).getRoom_number()))
@@ -61,19 +64,25 @@ public class BookedRoomsByDatesModel {
 		
 		// Notify observers of the change
 		ChangeEvent event = new ChangeEvent(this);
-		/*for(ChangeListener listener : listeners){
-			listener.stateChanged(event);
-		}*/
 		listeners.get(0).stateChanged(event);
 	}
 	
 	public void getBookingConfirmation(int room_number){
 		// Create a reservation & add it to the all_reservations variable
-		Reservation r = new Reservation(currentGuest.username, (Room)rooms.get(room_number), dateInterval, 
-				dateInterval.getNumberOfDays(), LocalDate.now());
-		all_reservations.add(r);
+		charge = roomType*dateInterval.getNumberOfDays();
+		Reservation r = new Reservation(currentGuest, (Room)rooms.get(room_number), dateInterval, 
+				charge, LocalDate.now());
+		all_reservations.add(r); 
 		ChangeEvent event = new ChangeEvent(this);
 		listeners.get(1).stateChanged(event);
+	}
+	
+	public DateInterval getDateInterval(){
+		return dateInterval;
+	}
+	
+	public int getCharge(){
+		return charge;
 	}
 	
 	public String toString(){
@@ -82,5 +91,15 @@ public class BookedRoomsByDatesModel {
 			s += Integer.toString(r) + "\n";
 		}
 		return s;
+	}
+	
+	/**
+	 * Reset fields to make new reservation
+	 */
+	public void resetFields(){
+		allRoomsByType = new ArrayList<Room>(); 
+		availableRoomsByType = new ArrayList<Integer>();
+		dateInterval = null;
+		roomType = 0;
 	}
 }

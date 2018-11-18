@@ -1,27 +1,28 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Reservation {
-	private String guestUsername;
+	private Guest guest;
 	private DateInterval dateInterval;
 	private Room room;
 	private int totalCharge;
 	private LocalDate bookingDate;
 	
 	
-	public Reservation(String guest, Room room, DateInterval dateInterval, 
+	public Reservation(Guest guest, Room room, DateInterval dateInterval, 
 			int total, LocalDate bookingDate) {
-		this.guestUsername = guest;
+		this.guest = guest;
 		this.dateInterval = dateInterval;
 		this.room = room;
 		this.totalCharge = total;
 		this.bookingDate = bookingDate;
 	}
 	
-	public String getGuest() {
-		return guestUsername;
+	public Guest getGuest() {
+		return guest;
 	}
-	public void setGuest(String guest) {
-		this.guestUsername = guest;
+	public void setGuest(Guest guest) {
+		this.guest = guest;
 	}
 	public DateInterval getDateInterval() {
 		return dateInterval;
@@ -49,7 +50,11 @@ public class Reservation {
 	}
 	
 	public String toString(){
-		return guestUsername + " " + room + " " + dateInterval.toString() 
-		 + " " + totalCharge + " " + bookingDate;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy");
+		return  "Name:\t" + guest.getName() 
+			+ "\nRoom#:\t" + room.getRoom_number() 
+			+ "\nDates:\t" + dateInterval.toString() 
+			+ "\nTotal:\t$" + totalCharge  
+			+ "\nBooked on:\t" + formatter.format(bookingDate) + "\n\n";
 	}
 }
