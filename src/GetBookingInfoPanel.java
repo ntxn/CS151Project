@@ -1,6 +1,4 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -12,22 +10,25 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 /**
- * Detect selection of  check in, check out.
- * 		 				room type
- * 						roomSelected
- * @author Kiera
+ * VIEW & CONTROLLER 2 for MVC Make A Reservation
+ * @author Ngan Nguyen
  *
  */
 public class GetBookingInfoPanel extends JPanel implements ChangeListener{
-	private LocalDate start_date;
-	private LocalDate end_date;
-	private BookedRoomsByDatesModel dataModel;
-	private int roomType;
-	private JTextArea availableRoomTextArea;
 	private static final int NUMBER_OF_ROOM_TYPE = 3;
+	private BookedRoomsByDatesModel dataModel;
+	private JTextArea availableRoomTextArea;
 	private JTextField start_date_txtField;
 	private JTextField end_date_txtField;
+	private LocalDate start_date;
+	private LocalDate end_date;
+	private int roomType;
 	
+	/**
+	 * Constructor to initialize dataModel & 
+	 * set up VIEW & CONTROLLER
+	 * @param dataModel
+	 */
 	public GetBookingInfoPanel(BookedRoomsByDatesModel dataModel){
 		this.dataModel = dataModel;
 		roomType = 0;
@@ -97,20 +98,11 @@ public class GetBookingInfoPanel extends JPanel implements ChangeListener{
 						"Checkout date is at least one day after check-in date", 
 						end_date, start_date);
 				
-				//System.out.println(start_date + "\t" + LocalDate.now() + "\t" + end_date +"\t" + roomType);
-				
 				if(roomType == 0)
 					button_error.setText("\t\tSelect a price");
 				else
 					button_error.setText("");
-				/*
-				System.out.println("1\t" + (start_date!= null && end_date != null));
-				if(start_date != null)
-					System.out.println("2\t" + start_date.isAfter(LocalDate.now()));
-				if(start_date!= null && end_date != null)
-					System.out.println("3\t" + end_date.isAfter(start_date));
-				System.out.println("4\t" + (roomType != 0));
-				*/
+				
 				if(start_date!= null && end_date != null && start_date.isAfter(
 						LocalDate.now()) && end_date.isAfter(start_date) && roomType != 0){
 					DateInterval dateInterval = new DateInterval(start_date, end_date);
@@ -153,7 +145,8 @@ public class GetBookingInfoPanel extends JPanel implements ChangeListener{
 	}
 	
 	/**
-	 * HELPER
+	 * HELPER METHOD
+	 * convert a string of the correct format into a LocalDate Object
 	 * @param input
 	 * @return
 	 */
@@ -165,9 +158,10 @@ public class GetBookingInfoPanel extends JPanel implements ChangeListener{
 	}
 	
 	/**
-	 * HELPER
+	 * HELPER METHOD
+	 * validate if the date enter is in the right format
 	 * @param input
-	 * @return
+	 * @return true/false
 	 */
 
 	private boolean validate_date_format(String input){
@@ -177,11 +171,16 @@ public class GetBookingInfoPanel extends JPanel implements ChangeListener{
 	}
 	
 	/**
-	 * 
+	 * HELPER METHOD
+	 * validate if the date entered is valid 
+	 * (ex: checkout date has to be after checking date,
+	 * 		Check-in date cannot be before the current date)
 	 * @param txtField
 	 * @param error_label
 	 * @param message
 	 * @param date
+	 * @param date_to_compare
+	 * @return LocalDate object of the date entered in the JTextfield
 	 */
 	private LocalDate validate_date_eligibility(JTextField txtField, JLabel error_label, 
 			String message, LocalDate date, LocalDate date_to_compare){

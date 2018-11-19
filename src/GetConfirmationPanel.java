@@ -9,12 +9,23 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * VIEW & CONTROLLER 1 for MVC Make A Reservation
+ * @author Ngan Nguyen
+ *
+ */
 public class GetConfirmationPanel extends JPanel implements ChangeListener{
-	private JLabel confirmation;
-	private int roomNumber;
 	private BookedRoomsByDatesModel dataModel;
 	private JTextField getRoomTextField;
+	private JLabel confirmationLabel;
+	private int roomNumber;
 	
+	
+	/**
+	 * Constructor to initialize dataModel & 
+	 * set up VIEW & CONTROLLER
+	 * @param data
+	 */
 	public GetConfirmationPanel(BookedRoomsByDatesModel data){
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		dataModel = data;
@@ -54,11 +65,11 @@ public class GetConfirmationPanel extends JPanel implements ChangeListener{
 		chooseRoomPANEL.add(roomInputError);
 	
 	//VIEW GUI
-		confirmation = new JLabel();
-		confirmation.setForeground(Color.RED);
+		confirmationLabel = new JLabel();
+		confirmationLabel.setForeground(Color.RED);
 		
 		JPanel confirmPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		confirmPanel.add(confirmation);
+		confirmPanel.add(confirmationLabel);
 	
 	//ADD all component to this JPanel
 		add(chooseRoomPANEL);
@@ -74,11 +85,13 @@ public class GetConfirmationPanel extends JPanel implements ChangeListener{
 		String s = "CONFIRMATION: Room # " + roomNumber +
 				"   From " + dataModel.getDateInterval().toString() 
 				+ "   TOTAL: $" + dataModel.getCharge();
-		confirmation.setText(s);
+		confirmationLabel.setText(s);
 	}
 	
 	/**
-	 * HELPER
+	 * HELPER METHOD
+	 * Verify if the room# that the guest enter is 
+	 * in the available room listed
 	 * @param number
 	 * @return
 	 */
@@ -96,7 +109,7 @@ public class GetConfirmationPanel extends JPanel implements ChangeListener{
 	 */
 	public void resetFields(){
 		roomNumber = 0;
-		confirmation.setText("");
+		confirmationLabel.setText("");
 		getRoomTextField.setText("");
 	}
 }

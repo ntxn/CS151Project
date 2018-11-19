@@ -1,5 +1,5 @@
 /**
- * 
+ * Holding guest's information
  * @author Ngan Nguyen
  *
  */
@@ -8,7 +8,12 @@ public class Guest {
 	String username;
 	String password;
 	
-	
+	/**
+	 * Constructor to create a new Guest object
+	 * @param name
+	 * @param username
+	 * @param password
+	 */
 	public Guest(String name, String username, String password) {
 		super();
 		this.name = name;
@@ -16,25 +21,57 @@ public class Guest {
 		this.password = password;
 	}
 	
+	/**
+	 * Get guest's name
+	 * @return guest's name
+	 */
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * set Guest's name
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 * Get guest's username
+	 * @return username
+	 */
 	public String getUsername() {
 		return username;
 	}
+	
+	/**
+	 * Set username
+	 * @param username
+	 */
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	
+	/**
+	 * Get password
+	 * @return	password
+	 */
 	public String getPassword() {
 		return password;
 	}
+	
+	/**
+	 * Set password
+	 * @param password
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
 	
+	/**
+	 * Convert Guest's info to a String
+	 */
 	public String toString(){
 		return name + " | UserName: " + username + " | Password: " + password;
 	}

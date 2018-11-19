@@ -14,20 +14,31 @@ import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * Panel to hold View & Controller for MVC View Reservations by Room
+ * @author Ngan Nguyen
+ *
+ */
 public class ReservationsByRoomPanel extends JPanel implements ChangeListener{
-	private ReservationsByRoomModel reservationsByRoomModel;
-	private ArrayList<Room> rooms;
-	private ArrayList<Reservation> res;
-	private JTextArea textArea;
+	private ReservationsByRoomModel reservationsByRoomModel;	// Data
+	private ArrayList<Room> rooms;	// All the rooms of the hotel
+	private JTextArea textArea;		// VIEW GUI - to display bookings
 	
+	/**
+	 * Constructor to make VIEW & CONTROLLER for Reservations By Room MVC
+	 * The new Object is Listener ready
+	 * @param reservationsByRoomModel
+	 * @param rooms
+	 */
 	public ReservationsByRoomPanel(ReservationsByRoomModel reservationsByRoomModel, ArrayList<Room> rooms){
 		this.reservationsByRoomModel = reservationsByRoomModel;
 		this.rooms = rooms;
 		
-		//CONTROLLER
+	//CONTROLLER
 		JPanel roomListPanel = new JPanel(new GridLayout(2,8));
 		ArrayList<JButton> roomButtons = new ArrayList<JButton>();
 		
+		// Add buttons for each room & add an ActionListener on them
 		for(int i=0; i<rooms.size(); i++){
 			JButton button = new JButton(String.valueOf(rooms.get(i).getRoom_number()));
 			button.addActionListener(new ActionListener(){
@@ -39,12 +50,14 @@ public class ReservationsByRoomPanel extends JPanel implements ChangeListener{
 			roomButtons.add(button);
 			roomListPanel.add(roomButtons.get(i));
 		}
-		
+	
+	//VIEW
 		textArea  = new JTextArea();
 		textArea.setBorder(BorderFactory.createCompoundBorder(
 				textArea.getBorder(), 
 		        BorderFactory.createEmptyBorder(20, 20, 20, 20)));
 		
+		// Add a scroll for textArea
 		JScrollPane scroll = new JScrollPane(textArea, 
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -58,10 +71,12 @@ public class ReservationsByRoomPanel extends JPanel implements ChangeListener{
 	}
 	
 	
-	
+	/**
+	 * VIEW - what to do when the data change
+	 */
 	@Override
 	public void stateChanged(ChangeEvent e){
-		res = reservationsByRoomModel.getReservationsByRoom();
+		ArrayList<Reservation> res = reservationsByRoomModel.getReservationsByRoom();
 		
 		String s = "";
 		for(int i=0; i<res.size(); i++)
