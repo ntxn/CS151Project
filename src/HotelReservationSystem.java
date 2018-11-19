@@ -23,7 +23,7 @@ public class HotelReservationSystem {
 		loadData("guests.txt", 1);
 		loadData("rooms.txt", 2);
 		loadData("reservations.txt", 3);
-		currentUser = (Guest) guests.get("ngannguyen");	
+		currentUser = (Guest) guests.get("Luweiwei");	
 		
 		/* TEST CODE FOR LOADING DATA 
         System.out.println(guests.get("ngannguyen2").toString());
@@ -82,12 +82,30 @@ public class HotelReservationSystem {
 		bookingPanel.add(getConfirmationPanel, BorderLayout.CENTER);
 		bookingPanel.add(endReservationPanel, BorderLayout.SOUTH);
 		
+	//VIEW/CANCEL RESERVATIONS BY GUEST
+		ViewCancelReservations viewCancelReservations = new ViewCancelReservations(all_reservations, currentUser);
+		// Add a scroll
+		JScrollPane scroll = new JScrollPane(viewCancelReservations, 
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		
+		JPanel cancelReservationsPanel = new JPanel(new BorderLayout());
+		cancelReservationsPanel.add(scroll, BorderLayout.CENTER);
+		
+		JButton cancelReservation_QUIT_Button = new JButton("Quit");
+		JPanel cancelReservationButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		cancelReservationButtonPanel.add(cancelReservation_QUIT_Button);
+		cancelReservationsPanel.add(cancelReservationButtonPanel, BorderLayout.SOUTH);
+				
+		
+		
 		JFrame frame = new JFrame("Hotel SEN");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(700, 500);
 		
-		frame.add(viewReservationByRoomPANEL);
+		//frame.add(viewReservationByRoomPANEL);
 		//frame.add(bookingPanel);
+		frame.add(cancelReservationsPanel);
 		
 		frame.setVisible(true);
     }

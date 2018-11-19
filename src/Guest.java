@@ -69,6 +69,13 @@ public class Guest {
 		this.password = password;
 	}
 	
+	public boolean isEqual(Guest g){
+		if(name.equals(g.getName()) && username.equals(g.getUsername())
+				&& password.equals(g.getPassword()))
+				return true;
+		return false;
+	}
+	
 	/**
 	 * Convert Guest's info to a String
 	 */
