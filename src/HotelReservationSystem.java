@@ -6,12 +6,16 @@ import java.util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
-
+/**
+ * NEED TO ADD FUNCTION TO BACK BUTTON OF view resersation by room
+ * @author Kiera
+ *
+ */
 public class HotelReservationSystem {
 	private static Hashtable guests = new Hashtable(); // hold existing guest info from guests.txt
 	private static ArrayList<Reservation> all_reservations = new ArrayList<Reservation>(); // hold all reservations from reservations.txt
     private static ArrayList<Room> rooms = new ArrayList<Room>(); // hold all general rooms info from rooms.txt
-    private static Hashtable rooms2 = new Hashtable();
+    private static Hashtable roomsByHashtable = new Hashtable();
     private static Hashtable catagorizedRooms = new Hashtable();
     private static Guest currentUser; // keep track of which user is using the program
     
@@ -35,13 +39,26 @@ public class HotelReservationSystem {
 		ReservationsByRoomModel reservationsByRoomModel = new ReservationsByRoomModel(all_reservations);
 		ReservationsByRoomPanel reservationsByRoomPanel = new ReservationsByRoomPanel(reservationsByRoomModel, rooms);
 		reservationsByRoomModel.addChangeListener(reservationsByRoomPanel);
+		JPanel viewReservationByRoomPANEL = new JPanel(new BorderLayout());
+		viewReservationByRoomPANEL.add(reservationsByRoomPanel, BorderLayout.CENTER);
+		
+		JPanel viewReservationByRoomButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JButton reservationsByRoomBACKbutton = new JButton("Back");
+		viewReservationByRoomButtonPanel.add(reservationsByRoomBACKbutton);
+		viewReservationByRoomPANEL.add(viewReservationByRoomButtonPanel, BorderLayout.SOUTH);
 		
 	//MVC - MAKING A RESERVATION	
-		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(all_reservations, catagorizedRooms, currentUser, rooms2);
+		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(all_reservations, catagorizedRooms, currentUser, roomsByHashtable);
+		
+		// VIEW & CONTROLLER 1
 		GetBookingInfoPanel getBookingInfoPanel = new GetBookingInfoPanel(bookedRoomsByDatesModel);
-		GetConfirmationPanel getConfirmationPanel = new GetConfirmationPanel(bookedRoomsByDatesModel);
 		bookedRoomsByDatesModel.addChangeListener(getBookingInfoPanel);
+		
+		// VIEW & CONTROLLER 2
+		GetConfirmationPanel getConfirmationPanel = new GetConfirmationPanel(bookedRoomsByDatesModel);
 		bookedRoomsByDatesModel.addChangeListener(getConfirmationPanel);
+		
+		// Button to add more reservations from the same guest
 		JButton moreReservation = new JButton("More Reservation");
 		moreReservation.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -50,10 +67,15 @@ public class HotelReservationSystem {
 				getConfirmationPanel.resetFields();
 			}
 		});
+		
+		// DONE button to go to view receipt page
 		JButton doneButton = new JButton("Done");
+		
+		
 		JPanel endReservationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		endReservationPanel.add(moreReservation);
 		endReservationPanel.add(doneButton);
+		
 		JPanel bookingPanel = new JPanel();
 		bookingPanel.setLayout(new BorderLayout());
 		bookingPanel.add(getBookingInfoPanel, BorderLayout.NORTH);
@@ -64,7 +86,7 @@ public class HotelReservationSystem {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(700, 500);
 		
-		frame.add(reservationsByRoomPanel);
+		frame.add(viewReservationByRoomPANEL);
 		//frame.add(bookingPanel);
 		
 		frame.setVisible(true);
@@ -102,7 +124,7 @@ public class HotelReservationSystem {
 				Room room = new Room(room_number, price);
 				rooms.add(room);
 				
-				rooms2.put(room_number, room);
+				roomsByHashtable.put(room_number, room);
 				
 				if(price == 100)
 					type1Rooms.add(room);
@@ -136,23 +158,12 @@ public class HotelReservationSystem {
 				
 				int room_number = Integer.parseInt(str[1]);
 				
-				all_reservations.add(new Reservation((Guest)guests.get(str[0]), getRoom(room_number), 
+				all_reservations.add(new Reservation((Guest)guests.get(str[0]), (Room)roomsByHashtable.get(room_number), 
 						dateInterval, Integer.parseInt(str[4]), bookingDate));
 			} 
 			break;
 		}
 		
 		fin.close();
-	}
-	
-	private static Room getRoom(int room_number){
-		Room theRoom = null;
-		for(Room r : rooms){
-			if(r.getRoom_number() == room_number){
-				theRoom = r;
-				break;
-			}
-		}
-		return theRoom;
 	}
 }
