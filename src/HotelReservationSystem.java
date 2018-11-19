@@ -93,6 +93,15 @@ public class HotelReservationSystem {
 		cancelReservationsPanel.add(scroll, BorderLayout.CENTER);
 		
 		JButton cancelReservation_QUIT_Button = new JButton("Quit");
+		
+		cancelReservation_QUIT_Button.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){ // FOR TEMPORARY TESTING ONLY
+				System.out.println("\n" + all_reservations.size());
+				for(int i=0; i < all_reservations.size(); i++)
+					System.out.println("\n#" + i+ "\n" + all_reservations.get(i).toString());
+			}
+		});
+		
 		JPanel cancelReservationButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		cancelReservationButtonPanel.add(cancelReservation_QUIT_Button);
 		cancelReservationsPanel.add(cancelReservationButtonPanel, BorderLayout.SOUTH);

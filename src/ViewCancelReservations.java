@@ -13,19 +13,20 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-/** CAN'T DISPLAY CANCEL CONFIRMATION MESSAGE
+/** 
  * This class allows User to View and Cancel their reservations
  * @author Ngan Nguyen
  *
  */
 public class ViewCancelReservations extends JPanel{
-	ArrayList<Reservation> guestReservations;
-	ArrayList<Reservation> reservations; 
-	ArrayList<Integer> originalIndexes;
-	Guest currentGuest;
-	JLabel cancelConfirmLabel;
-	ArrayList<JButton> buttons;
-	ArrayList<JPanel> panels;
+	private ArrayList<Reservation> guestReservations;
+	private ArrayList<Reservation> reservations; 
+	private ArrayList<Integer> originalIndexes;
+	private JPanel cancelConfirmationPanel;
+	private ArrayList<JButton> buttons;
+	private Guest currentGuest;
+	
+	
 	
 	/**
 	 * Constructor to initialize variables and set up JPanel
@@ -35,39 +36,59 @@ public class ViewCancelReservations extends JPanel{
 	 */
 	public ViewCancelReservations(ArrayList<Reservation> res, Guest guest){
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		
+		// INITIALIZE variables
 		reservations = res;
-		originalIndexes = new ArrayList<Integer>();
 		currentGuest = guest;
+		
+		originalIndexes = new ArrayList<Integer>();
 		guestReservations = new ArrayList<Reservation>();
 		buttons = new ArrayList<JButton>();
-		cancelConfirmLabel = new JLabel();
-		buttons = new ArrayList<JButton>();
-		panels = new ArrayList<JPanel>();
 		
+		// label to display cancellation confirmation
+		JLabel cancelConfirmLabel = new JLabel();
 		cancelConfirmLabel.setForeground(Color.RED);
-		add(cancelConfirmLabel);
+		cancelConfirmLabel.setText("1 Reservation " + " Cancelled. Current Reservations: ");
 		
+		cancelConfirmationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		cancelConfirmationPanel.add(cancelConfirmLabel);
+		cancelConfirmationPanel.setBorder(BorderFactory.createCompoundBorder(
+				cancelConfirmationPanel.getBorder(), 
+		        BorderFactory.createEmptyBorder(15, 20, 0, 0)));
+		
+		// Generate an ArrayList of Reservations made by currentGuest
 		generateGuestReservations(); 
 		
-		addReservationstoPanel(panels);
+		// Add all the panels that hold each reservation & a cancel button
+		// to the main panel (this class)
+		addSubPanelsToMainPanel();
 		
 		
 		setVisible(true);
 	}
 	
+	
 	/**
-	 * Adding all reservations of the same guest into an ArrayList
+	 * 
+	 */
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+	}
+	
+	
+	/**
+	 * Generate an ArrayList of Reservations made by currentGuest
 	 */
 	private void generateGuestReservations(){
-		for(int i = 0; i<reservations.size(); i++){
-			if(reservations.get(i).getGuest().isEqual(currentGuest)){
+		for(int i = 0; i<reservations.size(); i++)
+			if(reservations.get(i).getGuest().isEqual(currentGuest))
 				addReservation(reservations.get(i), i);
-			}
-		}
 	}
+	
 	
 	/**
 	 * Add a reservation to ArrayList guestReservations by date order
+	 * HELPER of generateGuestReservations
 	 * @param a Reservation object
 	 */
 	private void addReservation(Reservation r, int index){
@@ -86,24 +107,38 @@ public class ViewCancelReservations extends JPanel{
 		originalIndexes.add(i, index);
 	}
 	
+	
 	/**
-	 * 
-	 * @param r
-	 * @param index
-	 * @return
+	 * Add all the panels that hold each reservation & a cancel button
+	 * to the main panel (this class)
+	 * @param panels
 	 */
-	private JPanel displayAReservation(Reservation r){
+	private void addSubPanelsToMainPanel(){
+		JPanel p;
+		for(int i=0; i < guestReservations.size(); i++){
+			p = addReservationToAPanel(guestReservations.get(i), i+1);
+			addActionListener(i); // for each button
+			add(p);
+		}
+	}
+	
+	
+	/**
+	 * Add each reservation to an individual JPanel 
+	 * along with a JButton to cancel this reservation
+	 * @param r Reservation object
+	 * @param i index of this reservation in the array
+	 * @return a JPanel with a reservation & a button
+	 */
+	private JPanel addReservationToAPanel(Reservation r, int i){
 		JPanel panel = new JPanel(new BorderLayout());
 		
 		panel.setBorder(BorderFactory.createCompoundBorder(
 				panel.getBorder(), 
-		        BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+		        BorderFactory.createEmptyBorder(15, 20, 0, 20)));
 		
-		JTextArea textArea = new JTextArea(r.toString());
+		JTextArea textArea = new JTextArea("#" + i +"\n" + r.toString());
 		textArea.setOpaque(false);
-		textArea.setBorder(BorderFactory.createCompoundBorder(
-				panel.getBorder(), 
-		        BorderFactory.createEmptyBorder(0, 0, 0, 0)));
 		
 		panel.add(textArea, BorderLayout.CENTER);
 		JButton button = new JButton("Cancel This Reservation");
@@ -116,46 +151,46 @@ public class ViewCancelReservations extends JPanel{
 		return panel;
 	}
 	
-	private void addReservationstoPanel(ArrayList<JPanel> panels){
-		removeAll();
-		revalidate();
-		repaint();
-		for(int i=0; i < guestReservations.size(); i++){
-			JPanel p = displayAReservation(guestReservations.get(i));
-			addActionListeners(i);
-			panels.add(p);
-			add(p);
-		}
-	}
 	
-	
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-	}
-	
-	private void addActionListeners(int i){
+	/**
+	 * Add ActionListener to each button to delete the reservation
+	 * that it links to
+	 * @param i
+	 */
+	private void addActionListener(int i){
 		buttons.get(i).addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				guestReservations.remove(i);
 				int index = originalIndexes.get(i);
 				reservations.remove(index);
 				originalIndexes.remove(i);
-				decrementIndexes();
-				cancelConfirmLabel.setText("Reservation Cancelled. Current Reservations: ");
+				decrementIndexes(index);
 				buttons = new ArrayList<JButton>();
-				panels = new ArrayList<JPanel>();
 				
-				addReservationstoPanel(panels);
+				// Clear all existing components on the main Panel
+				removeAll();
+				revalidate();
+				repaint();
+				
+				// Display confirmation message
+				add(cancelConfirmationPanel);
+				
+				// Display the remaining reservations, if any
+				addSubPanelsToMainPanel();
 			}
 		});
 	}
 	
-	private void decrementIndexes(){
+	/**
+	 * Decrement only the original indexes after the j position
+	 * HELPER for addActionListener
+	 */
+	private void decrementIndexes(int removedIndex){
 		int index;
 		for(int i=0; i<originalIndexes.size(); i++){
 			index = originalIndexes.get(i);
-			originalIndexes.set(i, index-1);
+			if(index > removedIndex)
+				originalIndexes.set(i, index-1);
 		}
-			
 	}
 }
