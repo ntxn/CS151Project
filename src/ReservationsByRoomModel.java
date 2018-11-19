@@ -27,7 +27,7 @@ public class ReservationsByRoomModel {
 		reservationsByRoom = new ArrayList<Reservation>();
 		for(int i=0; i<all_reservations.size(); i++){
 			if(all_reservations.get(i).getRoom().getRoom_number() == room_number){
-				reservationsByRoom.add(all_reservations.get(i));
+				addReservation(all_reservations.get(i));
 			}
 		}
 		
@@ -36,5 +36,23 @@ public class ReservationsByRoomModel {
 		for(ChangeListener listener : listeners){
 			listener.stateChanged(event);
 		}
+	}
+	
+	/**
+	 * 
+	 * @param r
+	 */
+	private void addReservation(Reservation r){
+		int size = reservationsByRoom.size();
+		if(size == 0){
+			reservationsByRoom.add(r);
+			return;
+		}
+		
+		int i=0;
+		while(i<size && r.getDateInterval().isAfter(
+				reservationsByRoom.get(i).getDateInterval()))
+			i++;
+		reservationsByRoom.add(i, r);
 	}
 }

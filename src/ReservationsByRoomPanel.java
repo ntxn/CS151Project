@@ -9,6 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -44,11 +45,15 @@ public class ReservationsByRoomPanel extends JPanel implements ChangeListener{
 				textArea.getBorder(), 
 		        BorderFactory.createEmptyBorder(20, 20, 20, 20)));
 		
+		JScrollPane scroll = new JScrollPane(textArea, 
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		
 		setSize(700, 500);
 		setLayout(new BorderLayout());
 		
 		add(roomListPanel, BorderLayout.NORTH);
-		add(textArea, BorderLayout.CENTER);
+		add(scroll, BorderLayout.CENTER);
 		setVisible(true);
 	}
 	

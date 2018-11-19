@@ -19,7 +19,8 @@ public class HotelReservationSystem {
 		loadData("guests.txt", 1);
 		loadData("rooms.txt", 2);
 		loadData("reservations.txt", 3);
-		currentUser = (Guest) guests.get("ngannguyen");		
+		currentUser = (Guest) guests.get("ngannguyen");	
+		
 		/* TEST CODE FOR LOADING DATA 
         System.out.println(guests.get("ngannguyen2").toString());
 		

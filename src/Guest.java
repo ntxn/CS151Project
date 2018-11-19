@@ -1,4 +1,8 @@
-
+/**
+ * 
+ * @author Ngan Nguyen
+ *
+ */
 public class Guest {
 	String name;
 	String username;
@@ -11,8 +15,6 @@ public class Guest {
 		this.username = username;
 		this.password = password;
 	}
-	
-	
 	
 	public String getName() {
 		return name;

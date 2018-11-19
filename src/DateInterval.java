@@ -42,9 +42,17 @@ public class DateInterval {
 				end_date.atStartOfDay()).toDays();
 	}
 	
+	public boolean isAfter(DateInterval otherInterval){
+		if(this.start_date.isAfter(otherInterval.getStart_date()))
+			return true;
+		return false;
+	}
+	
 	public String toString(){
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy");
 		return formatter.format(start_date) + " - " 
 				+ formatter.format(end_date);
 	}
+	
+	
 }
