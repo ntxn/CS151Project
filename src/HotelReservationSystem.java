@@ -19,11 +19,17 @@ public class HotelReservationSystem {
     private static Hashtable catagorizedRooms = new Hashtable();
     private static Guest currentUser; // keep track of which user is using the program
     
+    
+    
 	public static void main(String[] args) throws FileNotFoundException{
 		loadData("guests.txt", 1);
 		loadData("rooms.txt", 2);
 		loadData("reservations.txt", 3);
-		currentUser = (Guest) guests.get("Luweiwei");	
+		currentUser = (Guest) guests.get("Luweiwei");
+		
+		JFrame frame = new JFrame("Hotel SEN");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(700, 500);
 		
 		/* TEST CODE FOR LOADING DATA 
         System.out.println(guests.get("ngannguyen2").toString());
@@ -103,7 +109,11 @@ public class HotelReservationSystem {
 				for(int i=0; i < all_reservations.size(); i++)
 					System.out.println("\n#" + i+ "\n" + all_reservations.get(i).toString());
 					*/
-				System.out.println(viewCancelReservations.printReceipt(formatter));
+				//System.out.println(viewCancelReservations.printReceipt(formatter));
+				
+				frame.add(viewReservationByRoomPANEL);
+				//frame.dispose();
+				
 			}
 		});
 		
@@ -116,9 +126,7 @@ public class HotelReservationSystem {
 		
 		
 		
-		JFrame frame = new JFrame("Hotel SEN");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(700, 500);
+		
 		
 		//frame.add(viewReservationByRoomPANEL);
 		//frame.add(bookingPanel);
