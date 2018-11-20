@@ -94,11 +94,16 @@ public class HotelReservationSystem {
 		
 		JButton cancelReservation_QUIT_Button = new JButton("Quit");
 		
+		ReceiptFormatter formatter = new SimpleFormatter(); // TESTER FOR RECEIPT
+		
+		
 		cancelReservation_QUIT_Button.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){ // FOR TEMPORARY TESTING ONLY
-				System.out.println("\n" + all_reservations.size());
+				/*System.out.println("\n" + all_reservations.size());
 				for(int i=0; i < all_reservations.size(); i++)
 					System.out.println("\n#" + i+ "\n" + all_reservations.get(i).toString());
+					*/
+				System.out.println(viewCancelReservations.printReceipt(formatter));
 			}
 		});
 		
@@ -106,6 +111,9 @@ public class HotelReservationSystem {
 		cancelReservationButtonPanel.add(cancelReservation_QUIT_Button);
 		cancelReservationsPanel.add(cancelReservationButtonPanel, BorderLayout.SOUTH);
 				
+		
+	
+		
 		
 		
 		JFrame frame = new JFrame("Hotel SEN");

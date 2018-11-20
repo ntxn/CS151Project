@@ -193,4 +193,10 @@ public class ViewCancelReservations extends JPanel{
 				originalIndexes.set(i, index-1);
 		}
 	}
+	
+	public String printReceipt(ReceiptFormatter formatter){
+		String s="";
+		return formatter.formatHeader() + formatter.formatReservation(guestReservations) 
+			+ formatter.formatFooter();
+	}
 }

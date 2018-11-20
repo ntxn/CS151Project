@@ -7,20 +7,11 @@
  *
  * @author sarahmai
  */
-public abstract class Formatter
+public abstract class Formatter implements ReceiptFormatter
 {
+	//public Formatter(){}
     public String formatHeader()
     {
-        return "";
-    }
-    
-    public String formatFooter()
-    {
-        return "";
-    }
-    
-    public String formatReservation(Reservation r)
-    {
-        return "";
+        return "Receipt Header";
     }
 }
