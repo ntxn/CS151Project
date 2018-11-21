@@ -93,7 +93,7 @@ public class HotelReservationSystem extends JFrame{
 		signInPanel.add(signInButton);
 		
 	// GUEST - SIGN UP
-		SignUp signUpPanel = new SignUp();
+		SignUp signUpPanel = new SignUp(guests);
 		JButton signUpButton = new JButton("Sign Up");
 		signUpPanel.add(signUpButton);
 		
@@ -209,15 +209,24 @@ public class HotelReservationSystem extends JFrame{
 		signInButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				Guest guest = signInPanel.verifyAccount();
-				if(guest == null)
-					System.out.println("WRONG");
-				else{
+				if(guest != null){
 					currentGuest = guest;
 					cardLayout.show(pages, "existingGuestMenu");
-					System.out.println("Correct");
 				}
 			}
 		});
+		
+		
+		signUpButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				Guest guest = signUpPanel.createAccount();
+				if(guest != null){
+					currentGuest = guest;
+					cardLayout.show(pages, "existingGuestMenu");
+				}
+			}
+		});
+		
 		
 	// ADD ACTIONLISTENER to each button to flip through different pages
 		addListenerToFlipPage(cancelReservation_QUIT_Button, "mainMenu");
@@ -231,8 +240,6 @@ public class HotelReservationSystem extends JFrame{
 		addListenerToFlipPage(viewByDateBackButton, "managerMenu");
 		addListenerToFlipPage(existingGuestButton,"signIn");
 		addListenerToFlipPage(newGuestButton,"signUp");
-		//addListenerToFlipPage(signInButton, "existingGuestMenu");
-		addListenerToFlipPage(signUpButton, "existingGuestMenu");
 		addListenerToFlipPage(makeAReservationButton, "guestBooking");
 		addListenerToFlipPage(viewCancelReservationButton,"viewCancelReservationPanel");
 		addListenerToFlipPage(doneButton, "receiptFormatOptions");
