@@ -20,7 +20,7 @@ public class HotelReservationSystem extends JFrame{
 		// hold all general rooms info from rooms.txt
 	private Hashtable categorizedRooms;
 	private Hashtable roomsByHashtable;
-    private Guest currentUser; // keep track of which user is using the program
+    private Guest currentGuest; // keep track of which user is using the program
     private CardLayout cardLayout;
     private JPanel pages;
     
@@ -33,7 +33,7 @@ public class HotelReservationSystem extends JFrame{
     	this.rooms = rooms;
     	this.categorizedRooms = catagorizedRooms;
     	this.roomsByHashtable = roomsByHashtable;
-    	currentUser = (Guest)guests.get("ngannguyen");
+    	currentGuest = (Guest)guests.get("ngannguyen");
     	
     	
     
@@ -88,7 +88,7 @@ public class HotelReservationSystem extends JFrame{
 		
 		
 	// GUEST - SIGN IN - 
-		SignIn signInPanel = new SignIn();
+		SignIn signInPanel = new SignIn(guests);
 		JButton signInButton = new JButton("Sign In");
 		signInPanel.add(signInButton);
 		
@@ -105,7 +105,7 @@ public class HotelReservationSystem extends JFrame{
 		existingGuestMenu.add(viewCancelReservationButton, new GridBagConstraints());
 		
 	//MVC - MAKING A RESERVATION	
-		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(reservations, categorizedRooms, currentUser, roomsByHashtable);
+		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(reservations, categorizedRooms, currentGuest, roomsByHashtable);
 		
 		// VIEW & CONTROLLER 1
 		GetBookingInfoPanel getBookingInfoPanel = new GetBookingInfoPanel(bookedRoomsByDatesModel);
@@ -154,7 +154,7 @@ public class HotelReservationSystem extends JFrame{
 		receiptPanel.add(receiptBackButton);
 		
 	//VIEW/CANCEL RESERVATIONS BY GUEST
-		ViewCancelReservations viewCancelReservations = new ViewCancelReservations(reservations, currentUser);
+		ViewCancelReservations viewCancelReservations = new ViewCancelReservations(reservations, currentGuest);
 		// Add a scroll
 		JScrollPane scroll = new JScrollPane(viewCancelReservations, 
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
@@ -202,7 +202,20 @@ public class HotelReservationSystem extends JFrame{
 		
 		loadReservationsButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				System.out.println("TO DO: link to load reservation");;
+				System.out.println("TO DO: link to load reservation");
+			}
+		});
+		
+		signInButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				Guest guest = signInPanel.verifyAccount();
+				if(guest == null)
+					System.out.println("WRONG");
+				else{
+					currentGuest = guest;
+					cardLayout.show(pages, "existingGuestMenu");
+					System.out.println("Correct");
+				}
 			}
 		});
 		
@@ -218,7 +231,7 @@ public class HotelReservationSystem extends JFrame{
 		addListenerToFlipPage(viewByDateBackButton, "managerMenu");
 		addListenerToFlipPage(existingGuestButton,"signIn");
 		addListenerToFlipPage(newGuestButton,"signUp");
-		addListenerToFlipPage(signInButton, "existingGuestMenu");
+		//addListenerToFlipPage(signInButton, "existingGuestMenu");
 		addListenerToFlipPage(signUpButton, "existingGuestMenu");
 		addListenerToFlipPage(makeAReservationButton, "guestBooking");
 		addListenerToFlipPage(viewCancelReservationButton,"viewCancelReservationPanel");
