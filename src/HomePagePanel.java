@@ -3,17 +3,27 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+<<<<<<< HEAD
 import java.util.Hashtable;
+=======
+>>>>>>> a80ac710643e85b9c0692e2d0e4d23da2d4a945f
 
 
 public class HomePagePanel extends JFrame {
 	public static void main(String args[]) {
 		  
+<<<<<<< HEAD
 		  //HomePage home = new HomePage();
 		 }
 }
 
 
+=======
+		  HomePage home = new HomePage();
+		 }
+}
+
+>>>>>>> a80ac710643e85b9c0692e2d0e4d23da2d4a945f
 class HomePage extends JFrame
 {
 	public HomePage()
@@ -28,18 +38,30 @@ class HomePage extends JFrame
 		guestButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
+<<<<<<< HEAD
 				//guestSignIn nextPage=new guestSignIn(); 
 				//nextPage.setVisible(true);
 				//dispose();
+=======
+				guestSignIn nextPage=new guestSignIn(); 
+				nextPage.setVisible(true);
+				dispose();
+>>>>>>> a80ac710643e85b9c0692e2d0e4d23da2d4a945f
 			}
 		});
   
 		managerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
+<<<<<<< HEAD
 				//guestSignIn nextPage=new guestSignIn(); 
 				//nextPage.setVisible(true);
 				//dispose();
+=======
+				guestSignIn nextPage=new guestSignIn(); 
+				nextPage.setVisible(true);
+				dispose();
+>>>>>>> a80ac710643e85b9c0692e2d0e4d23da2d4a945f
 			}
 		});
 		setLayout( new GridBagLayout() );
@@ -51,7 +73,10 @@ class HomePage extends JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }//home page class
+<<<<<<< HEAD
 /*
+=======
+>>>>>>> a80ac710643e85b9c0692e2d0e4d23da2d4a945f
 class guestSignIn extends JFrame
 {
 	public guestSignIn()
@@ -98,8 +123,12 @@ class guestSignIn extends JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
  }
 }//guest sign in class
+<<<<<<< HEAD
 */
 /*
+=======
+
+>>>>>>> a80ac710643e85b9c0692e2d0e4d23da2d4a945f
 class guestView extends JFrame
 {
 	public guestView()
@@ -146,12 +175,21 @@ class guestView extends JFrame
 
 class makeReservation extends JFrame 
 {
+<<<<<<< HEAD
 	private static Hashtable guests = new Hashtable(); // hold existing guest info from guests.txt
 	private static ArrayList<Reservation> all_reservations = new ArrayList<Reservation>(); // hold all reservations from reservations.txt
     private static ArrayList<Room> rooms = new ArrayList<Room>(); // hold all general rooms info from rooms.txt
     private static Hashtable roomsByHashtable = new Hashtable();
     private static Hashtable catagorizedRooms = new Hashtable();
     private static Guest currentUser; // keep track of which user is using the program
+=======
+	private static HashMap<String, Guest> guests = new HashMap<String, Guest>(); // hold existing guest info from guests.txt
+	private static ArrayList<Reservation> all_reservations = new ArrayList<Reservation>(); // hold all reservations from reservations.txt
+    private static ArrayList<Room> rooms = new ArrayList<Room>(); // hold all general rooms info from rooms.txt
+    private static HashMap<Integer, ArrayList<Room>> catagorizedRooms =
+    		new HashMap<Integer, ArrayList<Room>>();
+    private static String currentUser; // keep track of which user is using the program
+>>>>>>> a80ac710643e85b9c0692e2d0e4d23da2d4a945f
     
 	public static final int DEFAULT_WIDTH = 700;
 	public static final int DEFAULT_HEIGHT = 500;
@@ -162,9 +200,15 @@ class makeReservation extends JFrame
 		ReservationsByRoomPanel reservationsByRoomPanel = new ReservationsByRoomPanel(reservationsByRoomModel, rooms);
 		reservationsByRoomModel.addChangeListener(reservationsByRoomPanel);
 		
+<<<<<<< HEAD
 		//BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(all_reservations, catagorizedRooms);
 		//GetBookingInfoPanel getBookingInfoPanel = new GetBookingInfoPanel(bookedRoomsByDatesModel);
 		//bookedRoomsByDatesModel.addChangeListener(getBookingInfoPanel);
+=======
+		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(all_reservations, catagorizedRooms);
+		GetBookingInfoPanel getBookingInfoPanel = new GetBookingInfoPanel(bookedRoomsByDatesModel);
+		bookedRoomsByDatesModel.addChangeListener(getBookingInfoPanel);
+>>>>>>> a80ac710643e85b9c0692e2d0e4d23da2d4a945f
 		
 		setTitle("Make Reservation");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -176,4 +220,8 @@ class makeReservation extends JFrame
   
 }//make reservation
 
+<<<<<<< HEAD
 */
+=======
+
+>>>>>>> a80ac710643e85b9c0692e2d0e4d23da2d4a945f
