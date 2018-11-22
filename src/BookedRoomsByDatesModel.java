@@ -25,19 +25,18 @@ public class BookedRoomsByDatesModel {
 	
 	/**
 	 * Constructor to initialize some of the variables
-	 * @param all_reservations
+	 * @param reservations
 	 * @param catagorizedRooms
 	 * @param currentGuest
 	 * @param rooms
 	 */
-	public BookedRoomsByDatesModel(ArrayList<Reservation> all_reservations,
-			Hashtable catagorizedRooms, Guest currentGuest, Hashtable rooms){
+	public BookedRoomsByDatesModel(ArrayList<Reservation> reservations,
+			Hashtable catagorizedRooms, Hashtable rooms){
 		listeners = new ArrayList<ChangeListener>();
-		this.all_reservations = all_reservations;
+		this.all_reservations = reservations;
 		allRoomsByType = new ArrayList<Room>();
 		availableRoomsByType = new ArrayList<Integer>();
 		this.categorizedRooms = catagorizedRooms;
-		this.currentGuest = currentGuest;
 		this.rooms = rooms;
 	}
 
@@ -147,5 +146,13 @@ public class BookedRoomsByDatesModel {
 		availableRoomsByType = new ArrayList<Integer>();
 		dateInterval = null;
 		roomType = 0;
+	}
+	
+	/**
+	 * set the currentGuest
+	 * @param guest
+	 */
+	public void setCurrentGuest(Guest guest){
+		currentGuest = guest;
 	}
 }

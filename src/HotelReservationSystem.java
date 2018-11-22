@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import javax.swing.*;
@@ -20,7 +21,6 @@ public class HotelReservationSystem extends JFrame{
 		// hold all general rooms info from rooms.txt
 	private Hashtable categorizedRooms;
 	private Hashtable roomsByHashtable;
-    private Guest currentGuest; // keep track of which user is using the program
     private CardLayout cardLayout;
     private JPanel pages;
     
@@ -33,7 +33,6 @@ public class HotelReservationSystem extends JFrame{
     	this.rooms = rooms;
     	this.categorizedRooms = catagorizedRooms;
     	this.roomsByHashtable = roomsByHashtable;
-    	currentGuest = (Guest)guests.get("ngannguyen");
     	
     	
     
@@ -105,7 +104,7 @@ public class HotelReservationSystem extends JFrame{
 		existingGuestMenu.add(viewCancelReservationButton, new GridBagConstraints());
 		
 	//MVC - MAKING A RESERVATION	
-		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(reservations, categorizedRooms, currentGuest, roomsByHashtable);
+		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(reservations, categorizedRooms, roomsByHashtable);
 		
 		// VIEW & CONTROLLER 1
 		GetBookingInfoPanel getBookingInfoPanel = new GetBookingInfoPanel(bookedRoomsByDatesModel);
@@ -154,7 +153,7 @@ public class HotelReservationSystem extends JFrame{
 		receiptPanel.add(receiptBackButton);
 		
 	//VIEW/CANCEL RESERVATIONS BY GUEST
-		ViewCancelReservations viewCancelReservations = new ViewCancelReservations(reservations, currentGuest);
+		ViewCancelReservations viewCancelReservations = new ViewCancelReservations(reservations);
 		// Add a scroll
 		JScrollPane scroll = new JScrollPane(viewCancelReservations, 
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
@@ -163,12 +162,12 @@ public class HotelReservationSystem extends JFrame{
 		JPanel viewCancelReservationsPanel = new JPanel(new BorderLayout());
 		viewCancelReservationsPanel.add(scroll, BorderLayout.CENTER);
 		
-		JButton cancelReservation_QUIT_Button = new JButton("Quit");
+		JButton viewCancelReservation_QUIT_Button = new JButton("Quit");
 		
 		ReceiptFormatter formatter = new SimpleFormatter(); // TESTER FOR RECEIPT
 		
 		JPanel cancelReservationButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		cancelReservationButtonPanel.add(cancelReservation_QUIT_Button);
+		cancelReservationButtonPanel.add(viewCancelReservation_QUIT_Button);
 		viewCancelReservationsPanel.add(cancelReservationButtonPanel, BorderLayout.SOUTH);
 				
 		
@@ -188,17 +187,19 @@ public class HotelReservationSystem extends JFrame{
 		pages.add(receiptFormatOptionsPanel, "receiptFormatOptions");
 		pages.add(receiptPanel, "receiptPanel");
 		
-		
 		cardLayout = (CardLayout) pages.getLayout();
 		
 		
 	// ADD ACTIONLISTENER to button with different responsibility
 		quitProgramButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				System.out.println("TO DO: Export data to file");
+				// Export data & quit
+				exportData(1,"./reservationsOUTPUT.txt");
+			    exportData(2,"./guestsOUTPUT.txt");
 				closeFrame();
 			}
 		});
+		
 		
 		loadReservationsButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -206,11 +207,13 @@ public class HotelReservationSystem extends JFrame{
 			}
 		});
 		
+		
 		signInButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				Guest guest = signInPanel.verifyAccount();
 				if(guest != null){
-					currentGuest = guest;
+					viewCancelReservations.setCurrentGuest(guest);
+					bookedRoomsByDatesModel.setCurrentGuest(guest);
 					cardLayout.show(pages, "existingGuestMenu");
 				}
 			}
@@ -221,15 +224,26 @@ public class HotelReservationSystem extends JFrame{
 			public void actionPerformed(ActionEvent e){
 				Guest guest = signUpPanel.createAccount();
 				if(guest != null){
-					currentGuest = guest;
+					bookedRoomsByDatesModel.setCurrentGuest(guest);
+					viewCancelReservations.setCurrentGuest(guest);
 					cardLayout.show(pages, "existingGuestMenu");
 				}
 			}
 		});
 		
 		
+		viewCancelReservationButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				viewCancelReservations.displayReservations();
+				cardLayout.show(pages, "viewCancelReservationPanel");
+			}
+		});
+		
+		
+		
+		
+		
 	// ADD ACTIONLISTENER to each button to flip through different pages
-		addListenerToFlipPage(cancelReservation_QUIT_Button, "mainMenu");
 		addListenerToFlipPage(managerButton,"managerMenu");
 		addListenerToFlipPage(managerBackToMainMenuButton,"mainMenu");
 		addListenerToFlipPage(guestBackToMainMenuButton,"mainMenu");
@@ -241,16 +255,21 @@ public class HotelReservationSystem extends JFrame{
 		addListenerToFlipPage(existingGuestButton,"signIn");
 		addListenerToFlipPage(newGuestButton,"signUp");
 		addListenerToFlipPage(makeAReservationButton, "guestBooking");
-		addListenerToFlipPage(viewCancelReservationButton,"viewCancelReservationPanel");
 		addListenerToFlipPage(doneButton, "receiptFormatOptions");
 		addListenerToFlipPage(simpleFormatButton, "receiptPanel");
 		addListenerToFlipPage(comprehensiveFormatButton, "receiptPanel");
 		addListenerToFlipPage(receiptBackButton, "receiptFormatOptions");
-		addListenerToFlipPage(receiptDoneButton, "mainMenu");
+		
+		
+	// ADD ACTIONLISTENER to the button to return to main menu & reset currentGuest
+    	addListenerFlipBackToMainMenu(receiptDoneButton, bookedRoomsByDatesModel);
+    	addListenerFlipBackToMainMenu(viewCancelReservation_QUIT_Button, bookedRoomsByDatesModel);
 		
 		add(pages);
     }
     
+    
+   
     
     private void addListenerToFlipPage(JButton button, String nextPage){
     	button.addActionListener(new ActionListener(){
@@ -260,8 +279,60 @@ public class HotelReservationSystem extends JFrame{
 		});
     }
     
+    private void addListenerFlipBackToMainMenu(JButton button, BookedRoomsByDatesModel bookedRoomsByDatesModel){
+    	button.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				bookedRoomsByDatesModel.setCurrentGuest(null);
+				cardLayout.show(pages, "mainMenu");
+			}
+		});
+    }
+    
     private void closeFrame(){
     	super.dispose();
     }
+    
+    private void exportData(int dataType, String filename){
+    	BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(filename));
+        	
+            switch(dataType){
+            case 1: // Reservations
+            	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+                for(Reservation r : reservations){
+                	writer.write(r.getGuest().getUsername() + " "
+                				+r.getRoom().getRoom_number() + " "
+                				+r.getDateInterval().getStart_date() + " "
+                				+r.getDateInterval().getEnd_date() + " "
+                				+r.getTotal() + " "
+                				+formatter.format(r.getDateBooked()) + "\n");
+                }
+            	break;
+            case 2: // Guests
+            	Guest g;
+                Set<?> keySet = guests.keySet();
+                for(String key : keySet.stream().toArray(String[]::new)){ 
+                	g = (Guest)guests.get(key);
+                	writer.write(g.name + "\n"
+                				+g.username + " "
+                				+g.password + "\n");
+                }
+            	break;
+            }
+            
+        } catch (IOException e) {
+            System.err.println(e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    System.err.println(e);
+                }
+            }
+        }
+    }
+    
 	
 }

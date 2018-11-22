@@ -34,12 +34,11 @@ public class ViewCancelReservations extends JPanel{
 	 * @param res
 	 * @param guest
 	 */
-	public ViewCancelReservations(ArrayList<Reservation> res, Guest guest){
+	public ViewCancelReservations(ArrayList<Reservation> res){
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		// INITIALIZE variables
 		reservations = res;
-		currentGuest = guest;
 		
 		originalIndexes = new ArrayList<Integer>();
 		guestReservations = new ArrayList<Reservation>();
@@ -55,14 +54,6 @@ public class ViewCancelReservations extends JPanel{
 		cancelConfirmationPanel.setBorder(BorderFactory.createCompoundBorder(
 				cancelConfirmationPanel.getBorder(), 
 		        BorderFactory.createEmptyBorder(15, 20, 0, 0)));
-		
-		// Generate an ArrayList of Reservations made by currentGuest
-		generateGuestReservations(); 
-		
-		// Add all the panels that hold each reservation & a cancel button
-		// to the main panel (this class)
-		addSubPanelsToMainPanel();
-		
 		
 		setVisible(true);
 	}
@@ -110,10 +101,13 @@ public class ViewCancelReservations extends JPanel{
 	
 	/**
 	 * Add all the panels that hold each reservation & a cancel button
-	 * to the main panel (this class)
+	 * to the main panel (this class) to display them
 	 * @param panels
 	 */
-	private void addSubPanelsToMainPanel(){
+	public void displayReservations(){
+		// Generate an ArrayList of Reservations made by currentGuest
+		generateGuestReservations(); 
+		
 		JPanel p;
 		for(int i=0; i < guestReservations.size(); i++){
 			p = addReservationToAPanel(guestReservations.get(i), i+1);
@@ -176,7 +170,7 @@ public class ViewCancelReservations extends JPanel{
 				add(cancelConfirmationPanel);
 				
 				// Display the remaining reservations, if any
-				addSubPanelsToMainPanel();
+				displayReservations();
 			}
 		});
 	}
@@ -194,9 +188,19 @@ public class ViewCancelReservations extends JPanel{
 		}
 	}
 	
+	// NOT SURE IF IT's GONNA BE HERE
 	public String printReceipt(ReceiptFormatter formatter){
 		String s="";
 		return formatter.formatHeader() + formatter.formatReservation(guestReservations) 
 			+ formatter.formatFooter();
 	}
+	
+	/**
+	 * set the currentGuest
+	 * @param guest
+	 */
+	public void setCurrentGuest(Guest guest){
+		currentGuest = guest;
+	}
+	
 }

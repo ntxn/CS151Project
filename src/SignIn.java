@@ -70,6 +70,13 @@ public class SignIn extends JPanel{
 			passwordErrorLabel.setText("Incorrect Password");
 			return null;
 		}
+		
+		// Reset TextField
+		usernameTextField.setText("");
+		passwordTextField.setText("");
+		
 		return guest;
 	}
+	
+	
 }

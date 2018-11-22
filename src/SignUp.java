@@ -86,6 +86,11 @@ public class SignUp extends JPanel{
 						  username,
 						  passwordTextField.getText().trim());
 		guests.put(username, guest);
+		
+		// Reset TextField
+		nameTextField.setText("");
+		usernameTextField.setText("");
+		passwordTextField.setText("");
 						  
 		return guest;
 	}
