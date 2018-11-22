@@ -137,20 +137,7 @@ public class HotelReservationSystem extends JFrame{
 		bookingPanel.add(getBookingInfoPanel, BorderLayout.NORTH);
 		bookingPanel.add(getConfirmationPanel, BorderLayout.CENTER);
 		bookingPanel.add(endReservationPanel, BorderLayout.SOUTH);
-		
-	// RECEIPT FORMAT OPTIONS
-		JPanel receiptFormatOptionsPanel  = new JPanel(new GridBagLayout());
-    	JButton simpleFormatButton= new JButton("Simple Receipt");
-		JButton comprehensiveFormatButton = new JButton ("Comprehensive Receipt");
-		receiptFormatOptionsPanel.add(simpleFormatButton, new GridBagConstraints());
-		receiptFormatOptionsPanel.add(comprehensiveFormatButton, new GridBagConstraints());
-		
-	// JPANEL DISPLAY RECEIPT - general for both simple & comprehensive
-		Receipt receiptPanel = new Receipt();
-		JButton receiptDoneButton = new JButton("Exit");
-		JButton receiptBackButton = new JButton("Back");
-		receiptPanel.add(receiptDoneButton);
-		receiptPanel.add(receiptBackButton);
+
 		
 	//VIEW/CANCEL RESERVATIONS BY GUEST
 		ViewCancelReservations viewCancelReservations = new ViewCancelReservations(reservations);
@@ -164,12 +151,38 @@ public class HotelReservationSystem extends JFrame{
 		
 		JButton viewCancelReservation_QUIT_Button = new JButton("Quit");
 		
-		ReceiptFormatter formatter = new SimpleFormatter(); // TESTER FOR RECEIPT
+		//ReceiptFormatter formatter = new SimpleFormatter(); // TESTER FOR RECEIPT
 		
 		JPanel cancelReservationButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		cancelReservationButtonPanel.add(viewCancelReservation_QUIT_Button);
 		viewCancelReservationsPanel.add(cancelReservationButtonPanel, BorderLayout.SOUTH);
 				
+			
+	// RECEIPT FORMAT OPTIONS
+		JPanel receiptFormatOptionsPanel  = new JPanel(new GridBagLayout());
+                JButton simpleFormatButton= new JButton("Simple Receipt"); 
+                final JFrame frame = new JFrame();
+                ReceiptFormatter sformat = new SimpleFormatter();
+                frame.setVisible(true);
+                simpleFormatButton.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                        for(int i=0;i < reservations.size();i++)
+                        {
+                            System.out.println("\n#" + i + "\n" + reservations.get(i).toString());
+                            System.out.println(viewCancelReservations.printReceipt(sformat));
+                        }
+                    }
+                });
+		JButton comprehensiveFormatButton = new JButton ("Comprehensive Receipt");
+		receiptFormatOptionsPanel.add(simpleFormatButton, new GridBagConstraints());
+		receiptFormatOptionsPanel.add(comprehensiveFormatButton, new GridBagConstraints());
+	// JPANEL DISPLAY RECEIPT - general for both simple & comprehensive
+		Receipt receiptPanel = new Receipt();
+		JButton receiptDoneButton = new JButton("Exit");
+		JButton receiptBackButton = new JButton("Back");
+		receiptPanel.add(receiptDoneButton);
+		receiptPanel.add(receiptBackButton);
+		
 		
 	// PANEL to hold all PAGES
 		// Layout allows us to flip through different JPANEL
@@ -230,6 +243,8 @@ public class HotelReservationSystem extends JFrame{
 				}
 			}
 		});
+                
+                
 		
 		
 		viewCancelReservationButton.addActionListener(new ActionListener(){
