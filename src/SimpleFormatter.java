@@ -23,14 +23,14 @@ public class SimpleFormatter extends Formatter
     
     public String formatReservation(ArrayList<Reservation> reservations)
     {
-    	if(reservations !=null){
-    		// Search through the reservations arrayList to see which reservation 
-    		// has the latest bookingDate
-    		Reservation r = reservations.get(reservations.size()-1);
-    		total = r.getTotal();
-    		return r.toString();
+    	if(reservations !=null)
+        {
+            // Search through the reservations arrayList to see which reservation 
+            // has the latest bookingDate
+            Reservation r = reservations.get(reservations.size()-1);
+            total = r.getTotal();
+            return r.toString();
     	}
-    	
         return "No Reservation";
     }
     
