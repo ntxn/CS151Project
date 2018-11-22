@@ -27,9 +27,8 @@ public class CalendarView implements ChangeListener {
 	private JFrame frame = new JFrame("Calendar");
 	private JPanel monthViewPanel = new JPanel();
 	private JLabel monthLabel = new JLabel();
-	//private JButton create = new JButton("Create");
-	private JButton nextDay = new JButton("Next");
-	private JButton prevDay = new JButton("Prev");
+	private JButton nextDay = new JButton("Next Date");
+	private JButton prevDay = new JButton("Prev Date");
 	private JTextPane dayTextPane = new JTextPane();
 	private ArrayList<JButton> dayButtons = new ArrayList<JButton>();
 
@@ -41,33 +40,26 @@ public class CalendarView implements ChangeListener {
 		this.model = model;
 		maxDays = model.getMaxDays();
 		monthViewPanel.setLayout(new GridLayout(0, 7));
-		dayTextPane.setPreferredSize(new Dimension(300, 150));
+		dayTextPane.setPreferredSize(new Dimension(700, 200));
 		dayTextPane.setEditable(false);
 
 		createDayButtons();
 		addBlankButtons();
 		addDayButtons();
-		//highlightEvents();
 		showDate(model.getSelectedDay());
 		highlightSelectedDate(model.getSelectedDay() - 1);
 
-		/*create.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				createEventDialog();
-			}
-		});*/
+		
 		JButton prevMonth = new JButton("<");
 		prevMonth.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				model.prevMonth();
-				//create.setEnabled(false);
 				nextDay.setEnabled(false);
 				prevDay.setEnabled(false);
 				dayTextPane.setText("");
+				frame.setSize(700,500);
 			}
 		});
 		JButton nextMonth = new JButton(">");
@@ -76,10 +68,10 @@ public class CalendarView implements ChangeListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				model.nextMonth();
-				//create.setEnabled(false);
 				nextDay.setEnabled(false);
 				prevDay.setEnabled(false);
 				dayTextPane.setText("");
+				frame.setSize(700,500);
 			}
 		});
 		
@@ -87,7 +79,7 @@ public class CalendarView implements ChangeListener {
 		monthContainer.setLayout(new BorderLayout());
 		monthLabel.setText(arrayOfMonths[model.getCurrentMonth()] + " " + model.getCurrentYear());
 		monthContainer.add(monthLabel, BorderLayout.NORTH);
-		monthContainer.add(new JLabel("     S             M             T             W             T              F             S"), BorderLayout.CENTER);
+		monthContainer.add(new JLabel("  Sunday        Monday      Tuesday    Wednesday   Thursday      Friday       Saturday"), BorderLayout.CENTER);
 		monthContainer.add(monthViewPanel, BorderLayout.SOUTH);
 		
 		JPanel dayViewPanel = new JPanel();
@@ -115,7 +107,6 @@ public class CalendarView implements ChangeListener {
 			}
 		});
 		buttonsPanel.add(prevDay);
-		//buttonsPanel.add(create);
 		buttonsPanel.add(nextDay);
 		c.gridx = 0;
 		c.gridy = 1;
@@ -126,7 +117,7 @@ public class CalendarView implements ChangeListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//model.saveEvents();
+				
 				System.exit(0);
 			}
 		});
@@ -139,6 +130,7 @@ public class CalendarView implements ChangeListener {
 		frame.setLayout(new FlowLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
+		frame.setSize(700, 500);
 		frame.setVisible(true);
 	}
 
@@ -152,7 +144,7 @@ public class CalendarView implements ChangeListener {
 			createDayButtons();
 			addBlankButtons();
 			addDayButtons();
-			//highlightEvents();
+			
 			prevHighlight = -1;
 			model.resetHasMonthChanged();
 			frame.pack();
@@ -174,9 +166,7 @@ public class CalendarView implements ChangeListener {
 		String dayOfWeek = arrayOfDays[model.getDayOfWeek(d) - 1] + "";
 		String date = (model.getCurrentMonth() + 1) + "/" + d + "/" + model.getCurrentYear();
 		String events = "";
-		/*if (model.hasEvent(date)) {
-			events += model.getEvents(date);
-		}*/
+		
 		dayTextPane.setText(dayOfWeek + " " + date + "\n" + events);
 		dayTextPane.setCaretPosition(0);
 	}
