@@ -13,13 +13,6 @@ public class SimpleFormatter extends Formatter
 {
     //how many rooms booked total
     private double total;
-    /*
-    public String formatHeader()
-    {
-        total = 0;
-        return "Simple Receipt";
-    }
-    */
     
     public String formatReservation(ArrayList<Reservation> reservations)
     {

@@ -105,14 +105,16 @@ public class ViewCancelReservations extends JPanel{
 	 * @param panels
 	 */
 	public void displayReservations(){
-		// Generate an ArrayList of Reservations made by currentGuest
-		generateGuestReservations(); 
-		
-		JPanel p;
-		for(int i=0; i < guestReservations.size(); i++){
-			p = addReservationToAPanel(guestReservations.get(i), i+1);
-			addActionListener(i); // for each button
-			add(p);
+		if(currentGuest != null){
+			// Generate an ArrayList of Reservations made by currentGuest
+			generateGuestReservations(); 
+			
+			JPanel p;
+			for(int i=0; i < guestReservations.size(); i++){
+				p = addReservationToAPanel(guestReservations.get(i), i+1);
+				addActionListener(i); // for each button
+				add(p);
+			}
 		}
 	}
 	
@@ -188,12 +190,7 @@ public class ViewCancelReservations extends JPanel{
 		}
 	}
 	
-	// NOT SURE IF IT's GONNA BE HERE
-	public String printReceipt(ReceiptFormatter formatter){
-		String s="";
-		return formatter.formatHeader() + formatter.formatReservation(guestReservations) 
-			+ formatter.formatFooter();
-	}
+	
 	
 	/**
 	 * set the currentGuest
@@ -201,6 +198,11 @@ public class ViewCancelReservations extends JPanel{
 	 */
 	public void setCurrentGuest(Guest guest){
 		currentGuest = guest;
+	}
+	
+	public ArrayList<Reservation> getGuestReservations(){
+		displayReservations();
+		return guestReservations;
 	}
 	
 }
