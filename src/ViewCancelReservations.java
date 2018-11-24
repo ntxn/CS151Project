@@ -71,6 +71,7 @@ public class ViewCancelReservations extends JPanel{
 	 * Generate an ArrayList of Reservations made by currentGuest
 	 */
 	private void generateGuestReservations(){
+		guestReservations.clear();
 		for(int i = 0; i<reservations.size(); i++)
 			if(reservations.get(i).getGuest().isEqual(currentGuest))
 				addReservation(reservations.get(i), i);
@@ -99,24 +100,7 @@ public class ViewCancelReservations extends JPanel{
 	}
 	
 	
-	/**
-	 * Add all the panels that hold each reservation & a cancel button
-	 * to the main panel (this class) to display them
-	 * @param panels
-	 */
-	public void displayReservations(){
-		if(currentGuest != null){
-			// Generate an ArrayList of Reservations made by currentGuest
-			generateGuestReservations(); 
-			
-			JPanel p;
-			for(int i=0; i < guestReservations.size(); i++){
-				p = addReservationToAPanel(guestReservations.get(i), i+1);
-				addActionListener(i); // for each button
-				add(p);
-			}
-		}
-	}
+	
 	
 	
 	/**
@@ -135,6 +119,7 @@ public class ViewCancelReservations extends JPanel{
 		
 		JTextArea textArea = new JTextArea("#" + i +"\n" + r.toString());
 		textArea.setOpaque(false);
+		textArea.setEditable(false);
 		
 		panel.add(textArea, BorderLayout.CENTER);
 		JButton button = new JButton("Cancel This Reservation");
@@ -201,8 +186,42 @@ public class ViewCancelReservations extends JPanel{
 	}
 	
 	public ArrayList<Reservation> getGuestReservations(){
-		displayReservations();
+		generateGuestReservations();
 		return guestReservations;
+	}
+	
+	public void setReservations(ArrayList<Reservation> r){
+		reservations = r;
+	}
+	
+	/**
+	 * Add all the panels that hold each reservation & a cancel button
+	 * to the main panel (this class) to display them
+	 * @param panels
+	 */
+	public void displayReservations(){
+		// reset guestReservations
+		guestReservations.clear();
+		
+		
+		
+		// Generate an ArrayList of Reservations made by currentGuest
+		generateGuestReservations(); 
+		
+		JPanel p;
+		for(int i=0; i < guestReservations.size(); i++){ 
+			p = addReservationToAPanel(guestReservations.get(i), i+1);
+			addActionListener(i); // for each button
+			add(p);
+		}
+	}
+	
+	public void clearPanel(){
+		// Clear all existing components on the main Panel
+		removeAll();
+		revalidate();
+		repaint();
+		buttons = new ArrayList<JButton>();
 	}
 	
 }

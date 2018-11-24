@@ -100,7 +100,7 @@ public class BookedRoomsByDatesModel {
 	 * 			   Then notify VIEW 2 of the changes
 	 * @param room_number
 	 */
-	public void getBookingConfirmation(int room_number){
+	public Reservation getBookingConfirmation(int room_number){
 		// Create a reservation & add it to the all_reservations variable
 		charge = roomType*dateInterval.getNumberOfDays();
 		Reservation r = new Reservation(currentGuest, (Room)rooms.get(room_number), dateInterval, 
@@ -108,6 +108,8 @@ public class BookedRoomsByDatesModel {
 		all_reservations.add(r); 
 		ChangeEvent event = new ChangeEvent(this);
 		listeners.get(1).stateChanged(event);
+		
+		return r;
 	}
 	
 	/**

@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /*
@@ -16,15 +17,12 @@ public class SimpleFormatter extends Formatter
     
     public String formatReservation(ArrayList<Reservation> reservations)
     {
-    	if(reservations !=null){
-    		// Search through the reservations arrayList to see which reservation 
-    		// has the latest bookingDate
-    		Reservation r = reservations.get(reservations.size()-1);
-    		total = r.getTotal();
-    		return r.toString();
-    	}
+    	if(reservations.size() == 0)
+    		return "You did not book anything today";
     	
-        return "No Reservation";
+		Reservation r = reservations.get(0);
+		total = r.getTotal();
+		return r.toString();
     }
     
     public String formatFooter()

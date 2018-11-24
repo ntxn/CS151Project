@@ -7,7 +7,7 @@ public class ComprehensiveFormatter extends Formatter{
     
     public String formatReservation(ArrayList<Reservation> reservations)
     {
-    	if(reservations !=null){ System.out.println(reservations.size());
+    	if(reservations !=null){
     	String s = "";
     		for(Reservation r : reservations){
     			total += r.getTotal();

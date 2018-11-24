@@ -19,6 +19,7 @@ public class GetConfirmationPanel extends JPanel implements ChangeListener{
 	private JTextField getRoomTextField;
 	private JLabel confirmationLabel;
 	private int roomNumber;
+	private Reservation newReservation;
 	
 	
 	/**
@@ -29,6 +30,7 @@ public class GetConfirmationPanel extends JPanel implements ChangeListener{
 	public GetConfirmationPanel(BookedRoomsByDatesModel data){
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		dataModel = data;
+		newReservation = null;
 	
 	//CONTROLER
 		JLabel chooseRoomLABEL = new JLabel("Choose a Room");
@@ -47,7 +49,7 @@ public class GetConfirmationPanel extends JPanel implements ChangeListener{
 					roomInputError.setText("");
 					roomNumber = Integer.parseInt(input);
 					if(verifyRoomNumber(roomNumber))
-						dataModel.getBookingConfirmation(roomNumber);
+						newReservation = dataModel.getBookingConfirmation(roomNumber);
 					else
 						roomInputError.setText("Invalid Room Number");
 				}else{
@@ -111,5 +113,9 @@ public class GetConfirmationPanel extends JPanel implements ChangeListener{
 		roomNumber = 0;
 		confirmationLabel.setText("");
 		getRoomTextField.setText("");
+	}
+	
+	public Reservation getNewReservation(){
+		return newReservation;
 	}
 }

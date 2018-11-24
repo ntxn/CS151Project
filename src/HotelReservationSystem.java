@@ -23,9 +23,13 @@ public class HotelReservationSystem extends JFrame{
 	private Hashtable roomsByHashtable;
     private CardLayout cardLayout;
     private JPanel pages;
+    private ArrayList<Day> days;
+    private Hashtable existingDates;
+    private ArrayList<Integer> allRoomNumbers;
     
     public HotelReservationSystem(Hashtable guests, ArrayList<Reservation> reservations,
-    		ArrayList<Room> rooms, Hashtable catagorizedRooms, Hashtable roomsByHashtable){
+    		ArrayList<Room> rooms, Hashtable catagorizedRooms, Hashtable roomsByHashtable,
+    		ArrayList<Day> days, Hashtable existingDates, ArrayList<Integer> allRoomNumbers){
     
     	// INITIALIZE variables	
     	this.guests = guests;
@@ -33,9 +37,9 @@ public class HotelReservationSystem extends JFrame{
     	this.rooms = rooms;
     	this.categorizedRooms = catagorizedRooms;
     	this.roomsByHashtable = roomsByHashtable;
-    	
-    	
-    
+    	this.days = days;
+    	this.existingDates = existingDates;
+    	this.allRoomNumbers = allRoomNumbers;
     	
     // MAIN MENU - choose to use the program as a manager or guest
     	JPanel mainMenu = new JPanel(new GridBagLayout());
@@ -81,10 +85,21 @@ public class HotelReservationSystem extends JFrame{
 		viewReservationByRoomPANEL.add(viewReservationByRoomButtonPanel, BorderLayout.SOUTH);
 	
 	// MVC - VIEW RESERVATION BY DATE
-		ReservationsByDatePanel reservationsByDatePanel = new ReservationsByDatePanel();
-		JButton viewByDateBackButton = new JButton ("Back");
-		reservationsByDatePanel.add(viewByDateBackButton, new GridBagConstraints());
+		//ReservationsByDatePanel reservationsByDatePanel = new ReservationsByDatePanel();
 		
+		
+		
+		MyCalendar calendar = new MyCalendar(days, existingDates, allRoomNumbers);
+		CalendarPanel calendarMainPanel = new CalendarPanel(calendar);
+		calendar.attach(calendarMainPanel);
+		
+		JPanel calendarBottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		JButton calendarBackButton = new JButton ("Back");
+		calendarBottomPanel.add(calendarBackButton);
+		
+		JPanel calendarPanel = new JPanel(new BorderLayout());
+		calendarPanel.add(calendarMainPanel, BorderLayout.NORTH);
+		calendarPanel.add(calendarBackButton, BorderLayout.SOUTH);
 		
 	// GUEST - SIGN IN - 
 		SignIn signInPanel = new SignIn(guests);
@@ -104,7 +119,8 @@ public class HotelReservationSystem extends JFrame{
 		existingGuestMenu.add(viewCancelReservationButton, new GridBagConstraints());
 		
 	//MVC - MAKING A RESERVATION	
-		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(reservations, categorizedRooms, roomsByHashtable);
+		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(
+				reservations, categorizedRooms, roomsByHashtable);
 		
 		// VIEW & CONTROLLER 1
 		GetBookingInfoPanel getBookingInfoPanel = new GetBookingInfoPanel(bookedRoomsByDatesModel);
@@ -146,17 +162,15 @@ public class HotelReservationSystem extends JFrame{
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		JPanel viewCancelReservationsPanel = new JPanel(new BorderLayout());
-		viewCancelReservationsPanel.add(scroll, BorderLayout.CENTER);
+		
 		
 		JButton viewCancelReservation_QUIT_Button = new JButton("Quit");
-		
-		ReceiptFormatter formatter = new SimpleFormatter(); // TESTER FOR RECEIPT
-		
 		JPanel cancelReservationButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		cancelReservationButtonPanel.add(viewCancelReservation_QUIT_Button);
+		
+		JPanel viewCancelReservationsPanel = new JPanel(new BorderLayout());
+		viewCancelReservationsPanel.add(scroll, BorderLayout.CENTER);
 		viewCancelReservationsPanel.add(cancelReservationButtonPanel, BorderLayout.SOUTH);
-				
 
 	// RECEIPT FORMAT OPTIONS
 		JPanel receiptFormatOptionsPanel  = new JPanel(new GridBagLayout());
@@ -183,7 +197,9 @@ public class HotelReservationSystem extends JFrame{
 		pages.add(viewCancelReservationsPanel, "viewCancelReservationPanel");
 		pages.add(bookingPanel, "guestBooking");
 		pages.add(viewReservationByRoomPANEL, "managerReservationByROOM");
-		pages.add(reservationsByDatePanel, "managerReservationByDATE");
+		
+		pages.add(calendarPanel, "managerReservationByDATE");
+		
 		pages.add(signInPanel, "signIn");
 		pages.add(signUpPanel, "signUp");
 		pages.add(existingGuestMenu, "existingGuestMenu");
@@ -237,15 +253,44 @@ public class HotelReservationSystem extends JFrame{
 		
 		viewCancelReservationButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				viewCancelReservations.setReservations(reservations);
 				viewCancelReservations.displayReservations();
 				cardLayout.show(pages, "viewCancelReservationPanel");
+			}
+		});
+		
+		viewCancelReservation_QUIT_Button.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				bookedRoomsByDatesModel.setCurrentGuest(null);
+				viewCancelReservations.clearPanel();
+				cardLayout.show(pages, "mainMenu");
+			}
+		});
+		
+		receiptDoneButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				bookedRoomsByDatesModel.setCurrentGuest(null);
+				cardLayout.show(pages, "mainMenu");
+			}
+		});
+		
+		
+		doneButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				getConfirmationPanel.resetFields();
+				getBookingInfoPanel.resetFields();
+				cardLayout.show(pages, "receiptFormatOptions");
 			}
 		});
 		
 		
 		simpleFormatButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				receiptPanel.setGuestReservations(viewCancelReservations.getGuestReservations());
+				ArrayList<Reservation> res = new ArrayList<Reservation>();
+				Reservation r = getConfirmationPanel.getNewReservation();
+				if(r != null)
+					res.add(r);
+				receiptPanel.setGuestReservations(res);
 				receiptPanel.printReceipt(new SimpleFormatter());
 				cardLayout.show(pages, "receiptPanel");
 			}
@@ -268,18 +313,13 @@ public class HotelReservationSystem extends JFrame{
 		addListenerToFlipPage(viewReserveByRoomButton, "managerReservationByROOM");
 		addListenerToFlipPage(viewReserveByDateButton, "managerReservationByDATE");
 		addListenerToFlipPage(viewByRoomBackButton, "managerMenu");
-		addListenerToFlipPage(viewByDateBackButton, "managerMenu");
+		addListenerToFlipPage(calendarBackButton, "managerMenu");
 		addListenerToFlipPage(existingGuestButton,"signIn");
 		addListenerToFlipPage(newGuestButton,"signUp");
 		addListenerToFlipPage(makeAReservationButton, "guestBooking");
-		addListenerToFlipPage(doneButton, "receiptFormatOptions");
 		addListenerToFlipPage(receiptBackButton, "receiptFormatOptions");
 		
 		
-	// ADD ACTIONLISTENER to the button to return to main menu & reset currentGuest
-    	addListenerFlipBackToMainMenu(receiptDoneButton, bookedRoomsByDatesModel);
-    	addListenerFlipBackToMainMenu(viewCancelReservation_QUIT_Button, bookedRoomsByDatesModel);
-
 		
 		
 		add(pages);
@@ -292,15 +332,6 @@ public class HotelReservationSystem extends JFrame{
     	button.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				cardLayout.show(pages, nextPage);
-			}
-		});
-    }
-    
-    private void addListenerFlipBackToMainMenu(JButton button, BookedRoomsByDatesModel bookedRoomsByDatesModel){
-    	button.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				bookedRoomsByDatesModel.setCurrentGuest(null);
-				cardLayout.show(pages, "mainMenu");
 			}
 		});
     }

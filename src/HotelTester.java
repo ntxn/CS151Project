@@ -16,10 +16,19 @@ public class HotelTester {
 			// hold all general rooms info from rooms.txt
 	static Hashtable catagorizedRooms = new Hashtable();
 	static Hashtable roomsByHashtable = new Hashtable();
+	static ArrayList<Day> days = new ArrayList<Day>();
+	static Hashtable existingDates = new Hashtable();
+	static ArrayList<Integer> allRoomNumbers;
     
 	public static void main(String[] args) throws FileNotFoundException{
 		loadData("guests.txt", 1);
 		loadData("rooms.txt", 2);
+		
+		allRoomNumbers = new ArrayList<Integer>();
+		for(Room r : rooms)
+			allRoomNumbers.add(r.getRoom_number());
+		
+		
 		loadData("reservations.txt", 3);
 		
 		/* TEST CODE FOR LOADING DATA 
@@ -28,12 +37,19 @@ public class HotelTester {
         for(Room room : rooms)
         	System.out.println(room.toString());
         
-        for(Reservation r: all_reservations)
+        for(Reservation r: reservations)
         	System.out.println(r.toString());
-        */
+        
+        for(Day d : days){
+        	System.out.println(d.getDate() + " " + d.getReservations().size());
+        }*/
+        
+        
+        
 		
 		HotelReservationSystem system = new HotelReservationSystem(
-				guests, reservations, rooms, catagorizedRooms, roomsByHashtable);
+				guests, reservations, rooms, catagorizedRooms, roomsByHashtable, 
+				days, existingDates, allRoomNumbers);
 		
 		// FRAME SET UP 
 		system.setTitle("Hotel SEN");
@@ -107,13 +123,59 @@ public class HotelTester {
 				DateInterval dateInterval = new DateInterval(start_date, end_date);
 				
 				int room_number = Integer.parseInt(str[1]);
+				Reservation r = new Reservation((Guest)guests.get(str[0]), (Room)roomsByHashtable.get(room_number), 
+						dateInterval, Integer.parseInt(str[4]), bookingDate);
+				reservations.add(r);
 				
-				reservations.add(new Reservation((Guest)guests.get(str[0]), (Room)roomsByHashtable.get(room_number), 
-						dateInterval, Integer.parseInt(str[4]), bookingDate));
+				// Load to ArrayList<Day> days
+				Day d = new Day(allRoomNumbers);
+				LocalDate date1 = start_date;
+				while(date1.isBefore(end_date)){
+					addReservationToEachDay(d, date1, r, room_number);
+					date1 = date1.plusDays(1);
+				}
+					
 			} 
 			break;
 		}
 		
+		
 		fin.close();
 	}
+	
+
+	private static void addReservationToEachDay(Day d, LocalDate date, Reservation r, int room_number){
+		d = new Day(allRoomNumbers); 
+		int index = days.size();
+		if(index == 0 || !existingDates.contains(date)){
+			d.setDate(date);
+			d.addReservation(r);
+			d.updateAvailableRooms(room_number);
+			index =  addSortedDay(d);
+			existingDates.put(date, index);
+		}else{
+			index = (int)existingDates.get(date);
+			days.get(index).addReservation(r);
+			days.get(index).updateAvailableRooms(room_number);
+		}
+	}
+	
+	
+	private static int addSortedDay(Day d){
+		if(days.size() == 0){
+			days.add(d);
+			return 0;
+		}
+		
+		int index =0 ;
+		for(int i = 0; i<days.size(); i++){
+			if(d.getDate().isAfter(days.get(i).getDate()))
+				index++;
+			else
+				break;
+		}
+		days.add(index, d);
+		return index;
+	}
+	
 }
