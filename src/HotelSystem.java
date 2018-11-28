@@ -71,16 +71,16 @@ public class HotelSystem extends JFrame{
 		guestMenu.add(guestBackToMainMenuButton, new GridBagConstraints());
     	
     //MVC - VIEW RESERVATION BY ROOM	
-		ViewByRoomModel reservationsByRoomModel = new ViewByRoomModel(reservations);
-		ViewByRoomPanel reservationsByRoomPanel = new ViewByRoomPanel(reservationsByRoomModel, rooms);
-		reservationsByRoomModel.addChangeListener(reservationsByRoomPanel);
+		ViewByRoomModel viewByRoomModel = new ViewByRoomModel(reservations);
+		ViewByRoomPanel viewByRoomPanel = new ViewByRoomPanel(viewByRoomModel, rooms);
+		viewByRoomModel.addChangeListener(viewByRoomPanel);
 		JPanel viewReservationByRoomPANEL = new JPanel(new BorderLayout());
-		viewReservationByRoomPANEL.add(reservationsByRoomPanel, BorderLayout.CENTER);
+		viewReservationByRoomPANEL.add(viewByRoomPanel, BorderLayout.CENTER);
 		
-		JPanel viewReservationByRoomButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JPanel viewByRoomButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JButton viewByRoomBackButton = new JButton("Back");
-		viewReservationByRoomButtonPanel.add(viewByRoomBackButton);
-		viewReservationByRoomPANEL.add(viewReservationByRoomButtonPanel, BorderLayout.SOUTH);
+		viewByRoomButtonPanel.add(viewByRoomBackButton);
+		viewReservationByRoomPANEL.add(viewByRoomButtonPanel, BorderLayout.SOUTH);
 	
 	// MVC - VIEW RESERVATION BY DATE
 		//ReservationsByDatePanel reservationsByDatePanel = new ReservationsByDatePanel();
@@ -111,30 +111,30 @@ public class HotelSystem extends JFrame{
 		
 	// EXISTING GUEST MENU
 		JPanel existingGuestMenu = new JPanel(new GridBagLayout());
-    	JButton makeAReservationButton= new JButton("Make A Reservation");
+    	JButton bookingButton= new JButton("Make A Reservation");
 		JButton viewCancelReservationButton = new JButton ("View/Cancel Reservations");
-		existingGuestMenu.add(makeAReservationButton, new GridBagConstraints());
+		existingGuestMenu.add(bookingButton, new GridBagConstraints());
 		existingGuestMenu.add(viewCancelReservationButton, new GridBagConstraints());
 		
 	//MVC - MAKING A RESERVATION	
-		BookingModel bookedRoomsByDatesModel = new BookingModel(
+		BookingModel bookingModel = new BookingModel(
 				reservations, categorizedRooms, roomsByHashtable, calendar);
 		
 		// VIEW & CONTROLLER 1
-		BookingInfoPanel getBookingInfoPanel = new BookingInfoPanel(bookedRoomsByDatesModel);
-		bookedRoomsByDatesModel.addChangeListener(getBookingInfoPanel);
+		BookingInfoPanel bookingInfoPanel = new BookingInfoPanel(bookingModel);
+		bookingModel.addChangeListener(bookingInfoPanel);
 		
 		// VIEW & CONTROLLER 2
-		BookingConfirmsPanel getConfirmationPanel = new BookingConfirmsPanel(bookedRoomsByDatesModel);
-		bookedRoomsByDatesModel.addChangeListener(getConfirmationPanel);
+		BookingConfirmsPanel bookingConfirmsPanel = new BookingConfirmsPanel(bookingModel);
+		bookingModel.addChangeListener(bookingConfirmsPanel);
 		
 		// Button to add more reservations from the same guest
 		JButton moreReservation = new JButton("More Reservation");
 		moreReservation.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				bookedRoomsByDatesModel.resetFields();
-				getBookingInfoPanel.resetFields();
-				getConfirmationPanel.resetFields();
+				bookingModel.resetFields();
+				bookingInfoPanel.resetFields();
+				bookingConfirmsPanel.resetFields();
 			}
 		});
 		
@@ -148,27 +148,27 @@ public class HotelSystem extends JFrame{
 		
 		JPanel bookingPanel = new JPanel();
 		bookingPanel.setLayout(new BorderLayout());
-		bookingPanel.add(getBookingInfoPanel, BorderLayout.NORTH);
-		bookingPanel.add(getConfirmationPanel, BorderLayout.CENTER);
+		bookingPanel.add(bookingInfoPanel, BorderLayout.NORTH);
+		bookingPanel.add(bookingConfirmsPanel, BorderLayout.CENTER);
 		bookingPanel.add(endReservationPanel, BorderLayout.SOUTH);
 		
 		
 	//VIEW/CANCEL RESERVATIONS BY GUEST
-		GuestReservations viewCancelReservations = new GuestReservations(reservations, calendar);
+		GuestReservations guestReservations = new GuestReservations(reservations, calendar);
 		// Add a scroll
-		JScrollPane scroll = new JScrollPane(viewCancelReservations, 
+		JScrollPane scroll = new JScrollPane(guestReservations, 
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
 		
 		
-		JButton viewCancelReservation_QUIT_Button = new JButton("Quit");
-		JPanel cancelReservationButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		cancelReservationButtonPanel.add(viewCancelReservation_QUIT_Button);
+		JButton guestReservations_QUIT_Button = new JButton("Quit");
+		JPanel guestReservationsButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		guestReservationsButtonPanel.add(guestReservations_QUIT_Button);
 		
-		JPanel viewCancelReservationsPanel = new JPanel(new BorderLayout());
-		viewCancelReservationsPanel.add(scroll, BorderLayout.CENTER);
-		viewCancelReservationsPanel.add(cancelReservationButtonPanel, BorderLayout.SOUTH);
+		JPanel guestReservationsPanel = new JPanel(new BorderLayout());
+		guestReservationsPanel.add(scroll, BorderLayout.CENTER);
+		guestReservationsPanel.add(guestReservationsButtonPanel, BorderLayout.SOUTH);
 
 	// RECEIPT FORMAT OPTIONS
 		JPanel receiptFormatOptionsPanel  = new JPanel(new GridBagLayout());
@@ -192,12 +192,10 @@ public class HotelSystem extends JFrame{
 		pages.add(mainMenu, "mainMenu");
 		pages.add(managerMenu, "managerMenu");
 		pages.add(guestMenu, "guestMenu");
-		pages.add(viewCancelReservationsPanel, "viewCancelReservationPanel");
+		pages.add(guestReservationsPanel, "guestReservationPanel");
 		pages.add(bookingPanel, "guestBooking");
-		pages.add(viewReservationByRoomPANEL, "managerReservationByROOM");
-		
-		pages.add(calendarPanel, "managerReservationByDATE");
-		
+		pages.add(viewReservationByRoomPANEL, "viewByROOM");
+		pages.add(calendarPanel, "viewByDATE");
 		pages.add(signInPanel, "signIn");
 		pages.add(signUpPanel, "signUp");
 		pages.add(existingGuestMenu, "existingGuestMenu");
@@ -229,8 +227,8 @@ public class HotelSystem extends JFrame{
 			public void actionPerformed(ActionEvent e){
 				Guest guest = signInPanel.verifyAccount();
 				if(guest != null){
-					viewCancelReservations.setCurrentGuest(guest);
-					bookedRoomsByDatesModel.setCurrentGuest(guest);
+					guestReservations.setCurrentGuest(guest);
+					bookingModel.setCurrentGuest(guest);
 					cardLayout.show(pages, "existingGuestMenu");
 				}
 			}
@@ -241,8 +239,8 @@ public class HotelSystem extends JFrame{
 			public void actionPerformed(ActionEvent e){
 				Guest guest = signUpPanel.createAccount();
 				if(guest != null){
-					bookedRoomsByDatesModel.setCurrentGuest(guest);
-					viewCancelReservations.setCurrentGuest(guest);
+					bookingModel.setCurrentGuest(guest);
+					guestReservations.setCurrentGuest(guest);
 					cardLayout.show(pages, "existingGuestMenu");
 				}
 			}
@@ -251,23 +249,23 @@ public class HotelSystem extends JFrame{
 		
 		viewCancelReservationButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				viewCancelReservations.setReservations(reservations);
-				viewCancelReservations.displayReservations();
-				cardLayout.show(pages, "viewCancelReservationPanel");
+				guestReservations.setReservations(reservations);
+				guestReservations.displayReservations();
+				cardLayout.show(pages, "guestReservationPanel");
 			}
 		});
 		
-		viewCancelReservation_QUIT_Button.addActionListener(new ActionListener(){
+		guestReservations_QUIT_Button.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				bookedRoomsByDatesModel.setCurrentGuest(null);
-				viewCancelReservations.clearPanel();
+				bookingModel.setCurrentGuest(null);
+				guestReservations.clearPanel();
 				cardLayout.show(pages, "mainMenu");
 			}
 		});
 		
 		receiptDoneButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				bookedRoomsByDatesModel.setCurrentGuest(null);
+				bookingModel.setCurrentGuest(null);
 				cardLayout.show(pages, "mainMenu");
 			}
 		});
@@ -275,8 +273,8 @@ public class HotelSystem extends JFrame{
 		
 		doneButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				getConfirmationPanel.resetFields();
-				getBookingInfoPanel.resetFields();
+				bookingConfirmsPanel.resetFields();
+				bookingInfoPanel.resetFields();
 				cardLayout.show(pages, "receiptFormatOptions");
 			}
 		});
@@ -285,7 +283,7 @@ public class HotelSystem extends JFrame{
 		simpleFormatButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				ArrayList<Reservation> res = new ArrayList<Reservation>();
-				Reservation r = getConfirmationPanel.getNewReservation();
+				Reservation r = bookingConfirmsPanel.getNewReservation();
 				if(r != null)
 					res.add(r);
 				receiptPanel.setGuestReservations(res);
@@ -296,7 +294,7 @@ public class HotelSystem extends JFrame{
 		
 		comprehensiveFormatButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				receiptPanel.setGuestReservations(viewCancelReservations.getGuestReservations());
+				receiptPanel.setGuestReservations(guestReservations.getGuestReservations());
 				receiptPanel.printReceipt(new ComprehensiveFormatter());
 				cardLayout.show(pages, "receiptPanel");
 			}
@@ -304,7 +302,7 @@ public class HotelSystem extends JFrame{
 		
 		viewByRoomBackButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				reservationsByRoomPanel.resetFields();
+				viewByRoomPanel.resetFields();
 				cardLayout.show(pages, "managerMenu");
 			}
 		});
@@ -322,16 +320,14 @@ public class HotelSystem extends JFrame{
 		addListenerToFlipPage(managerBackToMainMenuButton,"mainMenu");
 		addListenerToFlipPage(guestBackToMainMenuButton,"mainMenu");
 		addListenerToFlipPage(guestButton, "guestMenu");
-		addListenerToFlipPage(viewReserveByRoomButton, "managerReservationByROOM");
-		addListenerToFlipPage(viewReserveByDateButton, "managerReservationByDATE");
+		addListenerToFlipPage(viewReserveByRoomButton, "viewByROOM");
+		addListenerToFlipPage(viewReserveByDateButton, "viewByDATE");
 		addListenerToFlipPage(existingGuestButton,"signIn");
 		addListenerToFlipPage(newGuestButton,"signUp");
-		addListenerToFlipPage(makeAReservationButton, "guestBooking");
+		addListenerToFlipPage(bookingButton, "guestBooking");
 		addListenerToFlipPage(receiptBackButton, "receiptFormatOptions");
 		
-		
-		
-		
+
 		add(pages);
     }
     
