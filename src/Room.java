@@ -56,4 +56,10 @@ public class Room {
 	public String toString(){
 		return room_number + " " + price;
 	}
+	
+	public boolean equals(Room r){
+		if(this.room_number == r.getRoom_number() && this.price == r.getPrice())
+			return true;
+		return false;
+	}
 }

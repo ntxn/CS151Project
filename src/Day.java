@@ -8,7 +8,8 @@ public class Day {
 	private ArrayList<Reservation> reservations;
 	private LocalDate date;
 	
-	public Day(ArrayList<Integer> rooms){
+	public Day(ArrayList<Integer> rooms, LocalDate d){
+		date = d;
 		availableRooms = new ArrayList<Integer>();
 		for(int i=0; i<rooms.size(); i++)
 			availableRooms.add(rooms.get(i));
@@ -24,13 +25,21 @@ public class Day {
 		return date;
 	}
 	
+	/*
 	public void addReservation(Reservation r){
 		reservations.add(r);
+	}*/
+	
+	private void removeReservation(Reservation r){
+		for(int i = 0; i < reservations.size(); i++){
+			if(r.equals(reservations.get(i))){
+				reservations.remove(i);
+				break;
+			}
+		}
 	}
-	
-	
 
-	public void updateAvailableRooms(int roomNumber){
+	private void removeAvailableRoom(int roomNumber){
 		for(int i=0; i<availableRooms.size(); i++){ 
 			if(availableRooms.get(i) == roomNumber){
 				availableRooms.remove(i);
@@ -39,10 +48,11 @@ public class Day {
 		}
 	}
 	
-	public void updateCancelledRoom(Room room){
-		int roomNumber = room.getRoom_number();
-		//availableRooms.put(roomNumber, room);
-		//reservations.remove(roomNumber);
+	private void addAvailableRoom(int roomNumber){
+		int i = 0;
+		while(availableRooms.get(i) < roomNumber)
+			i++;
+		availableRooms.add(i, roomNumber);
 	}
 	
 	public ArrayList<Integer> getAvailableRooms(){
@@ -53,4 +63,13 @@ public class Day {
 		return reservations;
 	}
 	
+	public void updateCancelledRoom(Reservation r){
+		removeReservation(r);
+		addAvailableRoom(r.getRoom().getRoom_number());
+	}
+	
+	public void addReservation(Reservation r){
+		reservations.add(r);
+		removeAvailableRoom(r.getRoom().getRoom_number());
+	}
 }

@@ -20,7 +20,7 @@ public class CalendarPanel extends JPanel implements ChangeListener{
 	}
 	
 	
-	private MyCalendar calendar;
+	private CalendarModel calendar;
 	private DAYS[] arrayOfDays;
 	private MONTHS[] arrayOfMonths;
 	private int prevHighlight;
@@ -45,10 +45,10 @@ public class CalendarPanel extends JPanel implements ChangeListener{
 	 * Constructs the calendar.
 	 * @param model the  model that stores and manipulates calendar data
 	 */
-	public CalendarPanel(MyCalendar model) {
+	public CalendarPanel(CalendarModel model) {
 		setLayout(new BorderLayout());
 		calendar = model;
-		maxDays = model.getMaxDays();
+		
 		
 		arrayOfDays = DAYS.values();
 		arrayOfMonths = MONTHS.values();
@@ -58,12 +58,16 @@ public class CalendarPanel extends JPanel implements ChangeListener{
 		prevHighlight = -1;
 		
 		roomsTextArea = new JTextArea();
-		roomsTextArea.setPreferredSize(new Dimension(500, 200));
+		
+		roomsTextArea.setBorder(BorderFactory.createCompoundBorder(
+				roomsTextArea.getBorder(), 
+		        BorderFactory.createEmptyBorder(20, 20, 20, 20)));
 		roomsTextArea.setEditable(false);
 
 		dayScrollPane = new JScrollPane(roomsTextArea,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		dayScrollPane.setPreferredSize(new Dimension(510, 200));
 		
 		monthContainer = new JPanel(new BorderLayout());
 		dayViewPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -138,9 +142,9 @@ public class CalendarPanel extends JPanel implements ChangeListener{
 			prevHighlight = -1;
 			calendar.resetHasMonthChanged();
 			displayCalendar();
-			repaint();
 		} else {
 			highlightSelectedDate(calendar.getSelectedDay() - 1);
+			roomsTextArea.setText(calendar.printRooms());
 		}
 	}
 
@@ -164,6 +168,7 @@ public class CalendarPanel extends JPanel implements ChangeListener{
 	 * Creates buttons representing days of the current month and adds them to an array list.
 	 */
 	private void createDayButtons() {
+		maxDays = calendar.getMaxDays();
 		dayButtons.clear();
 		for (int i = 1; i <= maxDays; i++) {
 			final int d = i;
@@ -173,9 +178,6 @@ public class CalendarPanel extends JPanel implements ChangeListener{
 			day.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					calendar.setSelectedDate(d);
-					highlightSelectedDate(d - 1);
-					roomsTextArea.setText(calendar.getRooms());
-					
 				}
 			});
 			dayButtons.add(day);
@@ -195,7 +197,11 @@ public class CalendarPanel extends JPanel implements ChangeListener{
 		}
 	}
 	
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
+	public void resetFields(){
+		roomsTextArea.setText("");
+		buttonsPanel.removeAll();
+		prevHighlight = -1;
+		calendar.reset();
+		displayCalendar();
 	}
 }

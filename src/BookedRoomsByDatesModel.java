@@ -21,6 +21,7 @@ public class BookedRoomsByDatesModel {
 	private Hashtable rooms;		// All rooms in the hotel
 	private int roomType;			// Hold the type of the room that guest chooses
 	private int charge;				// Total charge for the booking
+	private CalendarModel calendar;
 	
 	
 	/**
@@ -31,13 +32,14 @@ public class BookedRoomsByDatesModel {
 	 * @param rooms
 	 */
 	public BookedRoomsByDatesModel(ArrayList<Reservation> reservations,
-			Hashtable catagorizedRooms, Hashtable rooms){
+			Hashtable catagorizedRooms, Hashtable rooms, CalendarModel c){
 		listeners = new ArrayList<ChangeListener>();
 		this.all_reservations = reservations;
 		allRoomsByType = new ArrayList<Room>();
 		availableRoomsByType = new ArrayList<Integer>();
 		this.categorizedRooms = catagorizedRooms;
 		this.rooms = rooms;
+		this.calendar = c;
 	}
 
 	/**
@@ -106,6 +108,7 @@ public class BookedRoomsByDatesModel {
 		Reservation r = new Reservation(currentGuest, (Room)rooms.get(room_number), dateInterval, 
 				charge, LocalDate.now());
 		all_reservations.add(r); 
+		calendar.addReservation(r);
 		ChangeEvent event = new ChangeEvent(this);
 		listeners.get(1).stateChanged(event);
 		

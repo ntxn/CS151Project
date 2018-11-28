@@ -31,6 +31,8 @@ public class HotelTester {
 		
 		loadData("reservations.txt", 3);
 		
+		existingDates.clear();
+		
 		/* TEST CODE FOR LOADING DATA 
         System.out.println(guests.get("ngannguyen2").toString());
 		
@@ -49,7 +51,7 @@ public class HotelTester {
 		
 		HotelReservationSystem system = new HotelReservationSystem(
 				guests, reservations, rooms, catagorizedRooms, roomsByHashtable, 
-				days, existingDates, allRoomNumbers);
+				days, allRoomNumbers);
 		
 		// FRAME SET UP 
 		system.setTitle("Hotel SEN");
@@ -128,8 +130,9 @@ public class HotelTester {
 				reservations.add(r);
 				
 				// Load to ArrayList<Day> days
-				Day d = new Day(allRoomNumbers);
+				
 				LocalDate date1 = start_date;
+				Day d = new Day(allRoomNumbers, date1);
 				while(date1.isBefore(end_date)){
 					addReservationToEachDay(d, date1, r, room_number);
 					date1 = date1.plusDays(1);
@@ -145,18 +148,15 @@ public class HotelTester {
 	
 
 	private static void addReservationToEachDay(Day d, LocalDate date, Reservation r, int room_number){
-		d = new Day(allRoomNumbers); 
+		d = new Day(allRoomNumbers, date); 
 		int index = days.size();
 		if(index == 0 || !existingDates.contains(date)){
-			d.setDate(date);
 			d.addReservation(r);
-			d.updateAvailableRooms(room_number);
 			index =  addSortedDay(d);
 			existingDates.put(date, index);
 		}else{
 			index = (int)existingDates.get(date);
 			days.get(index).addReservation(r);
-			days.get(index).updateAvailableRooms(room_number);
 		}
 	}
 	

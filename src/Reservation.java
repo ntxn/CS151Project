@@ -98,7 +98,7 @@ public class Reservation {
 	 * get the date the reservation booked
 	 * @return LocalDate object of that date
 	 */
-	public LocalDate getDateBooked() {
+	public LocalDate getBookingDate() {
 		return bookingDate;
 	}
 	
@@ -108,6 +108,16 @@ public class Reservation {
 	 */
 	public void setDateBooked(LocalDate bookingDate) {
 		this.bookingDate = bookingDate;
+	}
+	
+	/**
+	 */
+	public boolean equals(Reservation r){
+		if(guest.equals(r.getGuest()) && room.equals(r.getRoom()) 
+				&& this.totalCharge == r.totalCharge 
+				&& bookingDate.equals(r.getBookingDate()))
+			return true;
+		return false;
 	}
 	
 	/**

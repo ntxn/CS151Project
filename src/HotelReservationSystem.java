@@ -24,12 +24,11 @@ public class HotelReservationSystem extends JFrame{
     private CardLayout cardLayout;
     private JPanel pages;
     private ArrayList<Day> days;
-    private Hashtable existingDates;
     private ArrayList<Integer> allRoomNumbers;
     
     public HotelReservationSystem(Hashtable guests, ArrayList<Reservation> reservations,
     		ArrayList<Room> rooms, Hashtable catagorizedRooms, Hashtable roomsByHashtable,
-    		ArrayList<Day> days, Hashtable existingDates, ArrayList<Integer> allRoomNumbers){
+    		ArrayList<Day> days,  ArrayList<Integer> allRoomNumbers){
     
     	// INITIALIZE variables	
     	this.guests = guests;
@@ -38,7 +37,6 @@ public class HotelReservationSystem extends JFrame{
     	this.categorizedRooms = catagorizedRooms;
     	this.roomsByHashtable = roomsByHashtable;
     	this.days = days;
-    	this.existingDates = existingDates;
     	this.allRoomNumbers = allRoomNumbers;
     	
     // MAIN MENU - choose to use the program as a manager or guest
@@ -89,7 +87,7 @@ public class HotelReservationSystem extends JFrame{
 		
 		
 		
-		MyCalendar calendar = new MyCalendar(days, existingDates, allRoomNumbers);
+		CalendarModel calendar = new CalendarModel(days, allRoomNumbers);
 		CalendarPanel calendarMainPanel = new CalendarPanel(calendar);
 		calendar.attach(calendarMainPanel);
 		
@@ -120,7 +118,7 @@ public class HotelReservationSystem extends JFrame{
 		
 	//MVC - MAKING A RESERVATION	
 		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(
-				reservations, categorizedRooms, roomsByHashtable);
+				reservations, categorizedRooms, roomsByHashtable, calendar);
 		
 		// VIEW & CONTROLLER 1
 		GetBookingInfoPanel getBookingInfoPanel = new GetBookingInfoPanel(bookedRoomsByDatesModel);
@@ -156,7 +154,7 @@ public class HotelReservationSystem extends JFrame{
 		
 		
 	//VIEW/CANCEL RESERVATIONS BY GUEST
-		ViewCancelReservations viewCancelReservations = new ViewCancelReservations(reservations);
+		ViewCancelReservations viewCancelReservations = new ViewCancelReservations(reservations, calendar);
 		// Add a scroll
 		JScrollPane scroll = new JScrollPane(viewCancelReservations, 
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
@@ -304,6 +302,20 @@ public class HotelReservationSystem extends JFrame{
 			}
 		});
 		
+		viewByRoomBackButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				reservationsByRoomPanel.resetFields();
+				cardLayout.show(pages, "managerMenu");
+			}
+		});
+		
+		calendarBackButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				calendarMainPanel.resetFields();
+				cardLayout.show(pages, "managerMenu");
+			}
+		});
+		
 		
 	// ADD ACTIONLISTENER to each button to flip through different pages
 		addListenerToFlipPage(managerButton,"managerMenu");
@@ -312,8 +324,6 @@ public class HotelReservationSystem extends JFrame{
 		addListenerToFlipPage(guestButton, "guestMenu");
 		addListenerToFlipPage(viewReserveByRoomButton, "managerReservationByROOM");
 		addListenerToFlipPage(viewReserveByDateButton, "managerReservationByDATE");
-		addListenerToFlipPage(viewByRoomBackButton, "managerMenu");
-		addListenerToFlipPage(calendarBackButton, "managerMenu");
 		addListenerToFlipPage(existingGuestButton,"signIn");
 		addListenerToFlipPage(newGuestButton,"signUp");
 		addListenerToFlipPage(makeAReservationButton, "guestBooking");
@@ -355,7 +365,7 @@ public class HotelReservationSystem extends JFrame{
                 				+r.getDateInterval().getStart_date() + " "
                 				+r.getDateInterval().getEnd_date() + " "
                 				+r.getTotal() + " "
-                				+formatter.format(r.getDateBooked()) + "\n");
+                				+formatter.format(r.getBookingDate()) + "\n");
                 }
             	break;
             case 2: // Guests

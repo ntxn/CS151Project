@@ -25,6 +25,7 @@ public class ViewCancelReservations extends JPanel{
 	private JPanel cancelConfirmationPanel;
 	private ArrayList<JButton> buttons;
 	private Guest currentGuest;
+	private CalendarModel calendar;
 	
 	
 	
@@ -34,11 +35,13 @@ public class ViewCancelReservations extends JPanel{
 	 * @param res
 	 * @param guest
 	 */
-	public ViewCancelReservations(ArrayList<Reservation> res){
+	public ViewCancelReservations(ArrayList<Reservation> res, CalendarModel c){
+		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		// INITIALIZE variables
 		reservations = res;
+		calendar = c;
 		
 		originalIndexes = new ArrayList<Integer>();
 		guestReservations = new ArrayList<Reservation>();
@@ -141,6 +144,7 @@ public class ViewCancelReservations extends JPanel{
 	private void addActionListener(int i){
 		buttons.get(i).addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				calendar.removeReservation(guestReservations.get(i));
 				guestReservations.remove(i);
 				int index = originalIndexes.get(i);
 				reservations.remove(index);

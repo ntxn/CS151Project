@@ -70,6 +70,10 @@ public class ReservationsByRoomPanel extends JPanel implements ChangeListener{
 		setVisible(true);
 	}
 	
+	public void resetFields(){
+		textArea.setText("");
+	}
+	
 	
 	/**
 	 * VIEW - what to do when the data change
