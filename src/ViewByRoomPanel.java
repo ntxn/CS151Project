@@ -19,8 +19,8 @@ import javax.swing.event.ChangeListener;
  * @author Ngan Nguyen
  *
  */
-public class ReservationsByRoomPanel extends JPanel implements ChangeListener{
-	private ReservationsByRoomModel reservationsByRoomModel;	// Data
+public class ViewByRoomPanel extends JPanel implements ChangeListener{
+	private ViewByRoomModel reservationsByRoomModel;	// Data
 	private ArrayList<Room> rooms;	// All the rooms of the hotel
 	private JTextArea textArea;		// VIEW GUI - to display bookings
 	
@@ -30,7 +30,7 @@ public class ReservationsByRoomPanel extends JPanel implements ChangeListener{
 	 * @param reservationsByRoomModel
 	 * @param rooms
 	 */
-	public ReservationsByRoomPanel(ReservationsByRoomModel reservationsByRoomModel, ArrayList<Room> rooms){
+	public ViewByRoomPanel(ViewByRoomModel reservationsByRoomModel, ArrayList<Room> rooms){
 		this.reservationsByRoomModel = reservationsByRoomModel;
 		this.rooms = rooms;
 		

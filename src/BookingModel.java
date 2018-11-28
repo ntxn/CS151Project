@@ -9,7 +9,7 @@ import javax.swing.event.*;
  * @author Ngan Nguyen
  *
  */
-public class BookedRoomsByDatesModel {
+public class BookingModel {
 	private ArrayList<Reservation> all_reservations;
 	private ArrayList<Integer> availableRoomsByType;
 	private ArrayList<ChangeListener> listeners;	// Data structure to hold listeners
@@ -31,7 +31,7 @@ public class BookedRoomsByDatesModel {
 	 * @param currentGuest
 	 * @param rooms
 	 */
-	public BookedRoomsByDatesModel(ArrayList<Reservation> reservations,
+	public BookingModel(ArrayList<Reservation> reservations,
 			Hashtable catagorizedRooms, Hashtable rooms, CalendarModel c){
 		listeners = new ArrayList<ChangeListener>();
 		this.all_reservations = reservations;

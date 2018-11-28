@@ -12,7 +12,7 @@ import javax.swing.event.*;
  * @author Ngan Nguyen
  *
  */
-public class HotelReservationSystem extends JFrame{
+public class HotelSystem extends JFrame{
 	private Hashtable guests;
 	// hold existing guests info from guests.txt
 	private ArrayList<Reservation> reservations;
@@ -26,7 +26,7 @@ public class HotelReservationSystem extends JFrame{
     private ArrayList<Day> days;
     private ArrayList<Integer> allRoomNumbers;
     
-    public HotelReservationSystem(Hashtable guests, ArrayList<Reservation> reservations,
+    public HotelSystem(Hashtable guests, ArrayList<Reservation> reservations,
     		ArrayList<Room> rooms, Hashtable catagorizedRooms, Hashtable roomsByHashtable,
     		ArrayList<Day> days,  ArrayList<Integer> allRoomNumbers){
     
@@ -71,8 +71,8 @@ public class HotelReservationSystem extends JFrame{
 		guestMenu.add(guestBackToMainMenuButton, new GridBagConstraints());
     	
     //MVC - VIEW RESERVATION BY ROOM	
-		ReservationsByRoomModel reservationsByRoomModel = new ReservationsByRoomModel(reservations);
-		ReservationsByRoomPanel reservationsByRoomPanel = new ReservationsByRoomPanel(reservationsByRoomModel, rooms);
+		ViewByRoomModel reservationsByRoomModel = new ViewByRoomModel(reservations);
+		ViewByRoomPanel reservationsByRoomPanel = new ViewByRoomPanel(reservationsByRoomModel, rooms);
 		reservationsByRoomModel.addChangeListener(reservationsByRoomPanel);
 		JPanel viewReservationByRoomPANEL = new JPanel(new BorderLayout());
 		viewReservationByRoomPANEL.add(reservationsByRoomPanel, BorderLayout.CENTER);
@@ -117,15 +117,15 @@ public class HotelReservationSystem extends JFrame{
 		existingGuestMenu.add(viewCancelReservationButton, new GridBagConstraints());
 		
 	//MVC - MAKING A RESERVATION	
-		BookedRoomsByDatesModel bookedRoomsByDatesModel = new BookedRoomsByDatesModel(
+		BookingModel bookedRoomsByDatesModel = new BookingModel(
 				reservations, categorizedRooms, roomsByHashtable, calendar);
 		
 		// VIEW & CONTROLLER 1
-		GetBookingInfoPanel getBookingInfoPanel = new GetBookingInfoPanel(bookedRoomsByDatesModel);
+		BookingInfoPanel getBookingInfoPanel = new BookingInfoPanel(bookedRoomsByDatesModel);
 		bookedRoomsByDatesModel.addChangeListener(getBookingInfoPanel);
 		
 		// VIEW & CONTROLLER 2
-		GetConfirmationPanel getConfirmationPanel = new GetConfirmationPanel(bookedRoomsByDatesModel);
+		BookingConfirmsPanel getConfirmationPanel = new BookingConfirmsPanel(bookedRoomsByDatesModel);
 		bookedRoomsByDatesModel.addChangeListener(getConfirmationPanel);
 		
 		// Button to add more reservations from the same guest
@@ -154,7 +154,7 @@ public class HotelReservationSystem extends JFrame{
 		
 		
 	//VIEW/CANCEL RESERVATIONS BY GUEST
-		ViewCancelReservations viewCancelReservations = new ViewCancelReservations(reservations, calendar);
+		GuestReservations viewCancelReservations = new GuestReservations(reservations, calendar);
 		// Add a scroll
 		JScrollPane scroll = new JScrollPane(viewCancelReservations, 
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 

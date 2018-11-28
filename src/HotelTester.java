@@ -49,7 +49,7 @@ public class HotelTester {
         
         
 		
-		HotelReservationSystem system = new HotelReservationSystem(
+		HotelSystem system = new HotelSystem(
 				guests, reservations, rooms, catagorizedRooms, roomsByHashtable, 
 				days, allRoomNumbers);
 		

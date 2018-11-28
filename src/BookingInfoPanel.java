@@ -14,9 +14,9 @@ import javax.swing.event.*;
  * @author Ngan Nguyen
  *
  */
-public class GetBookingInfoPanel extends JPanel implements ChangeListener{
+public class BookingInfoPanel extends JPanel implements ChangeListener{
 	private static final int NUMBER_OF_ROOM_TYPE = 3;
-	private BookedRoomsByDatesModel dataModel;
+	private BookingModel dataModel;
 	private JTextArea availableRoomTextArea;
 	private JTextField start_date_txtField;
 	private JTextField end_date_txtField;
@@ -29,7 +29,7 @@ public class GetBookingInfoPanel extends JPanel implements ChangeListener{
 	 * set up VIEW & CONTROLLER
 	 * @param dataModel
 	 */
-	public GetBookingInfoPanel(BookedRoomsByDatesModel dataModel){
+	public BookingInfoPanel(BookingModel dataModel){
 		this.dataModel = dataModel;
 		roomType = 0;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));		
@@ -134,7 +134,7 @@ public class GetBookingInfoPanel extends JPanel implements ChangeListener{
 	 * VIEW Respond to data model changes
 	 */
 	public void stateChanged(ChangeEvent e){
-		dataModel = (BookedRoomsByDatesModel) e.getSource();
+		dataModel = (BookingModel) e.getSource();
 		ArrayList<Integer> availableRooms = dataModel.getAvailableRoomsByType();
 		
 		String s = "";

@@ -14,8 +14,8 @@ import javax.swing.event.ChangeListener;
  * @author Ngan Nguyen
  *
  */
-public class GetConfirmationPanel extends JPanel implements ChangeListener{
-	private BookedRoomsByDatesModel dataModel;
+public class BookingConfirmsPanel extends JPanel implements ChangeListener{
+	private BookingModel dataModel;
 	private JTextField getRoomTextField;
 	private JLabel confirmationLabel;
 	private int roomNumber;
@@ -27,7 +27,7 @@ public class GetConfirmationPanel extends JPanel implements ChangeListener{
 	 * set up VIEW & CONTROLLER
 	 * @param data
 	 */
-	public GetConfirmationPanel(BookedRoomsByDatesModel data){
+	public BookingConfirmsPanel(BookingModel data){
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		dataModel = data;
 		newReservation = null;

@@ -18,7 +18,7 @@ import javax.swing.JTextArea;
  * @author Ngan Nguyen
  *
  */
-public class ViewCancelReservations extends JPanel{
+public class GuestReservations extends JPanel{
 	private ArrayList<Reservation> guestReservations;
 	private ArrayList<Reservation> reservations; 
 	private ArrayList<Integer> originalIndexes;
@@ -35,7 +35,7 @@ public class ViewCancelReservations extends JPanel{
 	 * @param res
 	 * @param guest
 	 */
-	public ViewCancelReservations(ArrayList<Reservation> res, CalendarModel c){
+	public GuestReservations(ArrayList<Reservation> res, CalendarModel c){
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		

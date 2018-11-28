@@ -7,7 +7,7 @@ import javax.swing.event.*;
  * @author Ngan Nguyen
  *
  */
-public class ReservationsByRoomModel {
+public class ViewByRoomModel {
 	private ArrayList<ChangeListener> listeners;		// Data structure to hold listeners
 	private ArrayList<Reservation> all_reservations;	// ALL reservations
 	private ArrayList<Reservation> reservationsByRoom; 	// Data structure to hold data
@@ -17,7 +17,7 @@ public class ReservationsByRoomModel {
 	 * Contructor to initialize variables
 	 * @param all_reservations
 	 */
-	public ReservationsByRoomModel(ArrayList<Reservation> all_reservations){
+	public ViewByRoomModel(ArrayList<Reservation> all_reservations){
 		listeners = new ArrayList<ChangeListener>();
 		this.all_reservations = all_reservations;
 	}
