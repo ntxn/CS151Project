@@ -13,18 +13,17 @@ import javax.swing.event.*;
  *
  */
 public class HotelSystem extends JFrame{
-	private Hashtable guests;
-	// hold existing guests info from guests.txt
-	private ArrayList<Reservation> reservations;
-		// hold all reservations from reservations.txt
-	private ArrayList<Room> rooms;
-		// hold all general rooms info from rooms.txt
+	private Hashtable guests; // hold existing guests info 
+	private ArrayList<Reservation> reservations; // hold all reservations
+	private ArrayList<Room> rooms; // hold all general rooms info
 	private Hashtable categorizedRooms;
 	private Hashtable roomsByHashtable;
     private CardLayout cardLayout;
     private JPanel pages;
     private ArrayList<Day> days;
     private ArrayList<Integer> allRoomNumbers;
+    private boolean loadStatus;
+    
     
     public HotelSystem(Hashtable guests, ArrayList<Reservation> reservations,
     		ArrayList<Room> rooms, Hashtable catagorizedRooms, Hashtable roomsByHashtable,
@@ -38,7 +37,15 @@ public class HotelSystem extends JFrame{
     	this.roomsByHashtable = roomsByHashtable;
     	this.days = days;
     	this.allRoomNumbers = allRoomNumbers;
+    	loadStatus = false;
+    	JLabel status = new JLabel();
     	
+    	
+    // GRIDBAG CONSTRAINT
+    	GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        
     // MAIN MENU - choose to use the program as a manager or guest
     	JPanel mainMenu = new JPanel(new GridBagLayout());
     	JButton guestButton= new JButton("Guest");
@@ -48,50 +55,67 @@ public class HotelSystem extends JFrame{
 		
 	// MANAGER MENU
 		JPanel managerMenu = new JPanel(new GridBagLayout());
-		JLabel viewReservationLabel = new JLabel("View Reservation");
-		JButton viewReserveByRoomButton = new JButton("View By Room");
-		JButton viewReserveByDateButton = new JButton("View By Date");
-		JButton managerBackToMainMenuButton = new JButton("Back");
+		JPanel viewRoomPanel = new JPanel();
+		JButton viewReserveByRoomButton = new JButton("View Reservations By Room");
+		viewRoomPanel.add(viewReserveByRoomButton);
+		
+		JPanel viewDatePanel = new JPanel();
+		JButton viewReserveByDateButton = new JButton("View Reservations By Date");
+		viewDatePanel.add(viewReserveByDateButton);
+		
+		JPanel managerBackPanel = new JPanel();
+		JButton managerBackButton = new JButton("Main Menu");
+		managerBackPanel.add(managerBackButton);
+		
+		JPanel loadPanel = new JPanel();
 		JButton loadReservationsButton = new JButton("Load Reservation");
-		JButton quitProgramButton = new JButton("Quit");
-		managerMenu.add(viewReservationLabel, new GridBagConstraints());
-		managerMenu.add(viewReserveByRoomButton, new GridBagConstraints());
-		managerMenu.add(viewReserveByDateButton, new GridBagConstraints());
-		managerMenu.add(managerBackToMainMenuButton, new GridBagConstraints());
-		managerMenu.add(loadReservationsButton, new GridBagConstraints());
-		managerMenu.add(quitProgramButton, new GridBagConstraints());
+		
+		
+		loadPanel.add(loadReservationsButton);
+		loadPanel.add(status);
+		
+		JPanel quitPanel = new JPanel();
+		JButton quitProgramButton = new JButton("Quit Program");
+		quitPanel.add(quitProgramButton);
+		
+		managerMenu.add(loadPanel, gbc);
+		managerMenu.add(viewRoomPanel, gbc);
+		managerMenu.add(viewDatePanel, gbc);
+		managerMenu.add(managerBackPanel, gbc);
+		managerMenu.add(quitPanel, gbc);
+		
+		
 		
 	// GUEST MENU
 		JPanel guestMenu = new JPanel(new GridBagLayout());
 		JButton existingGuestButton= new JButton("Log In");
 		JButton newGuestButton = new JButton ("Sign Up");
-		JButton guestBackToMainMenuButton = new JButton("Back to Main Menu");
-		guestMenu.add(existingGuestButton, new GridBagConstraints());
-		guestMenu.add(newGuestButton, new GridBagConstraints());
-		guestMenu.add(guestBackToMainMenuButton, new GridBagConstraints());
+		JButton guestBackButton = new JButton("Main Menu");
+		
+		guestMenu.add(existingGuestButton, gbc);
+		guestMenu.add(newGuestButton, gbc);
+		guestMenu.add(guestBackButton, gbc);
+		
     	
     //MVC - VIEW RESERVATION BY ROOM	
 		ViewByRoomModel viewByRoomModel = new ViewByRoomModel(reservations);
 		ViewByRoomPanel viewByRoomPanel = new ViewByRoomPanel(viewByRoomModel, rooms);
 		viewByRoomModel.addChangeListener(viewByRoomPanel);
-		JPanel viewReservationByRoomPANEL = new JPanel(new BorderLayout());
-		viewReservationByRoomPANEL.add(viewByRoomPanel, BorderLayout.CENTER);
 		
 		JPanel viewByRoomButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JButton viewByRoomBackButton = new JButton("Back");
 		viewByRoomButtonPanel.add(viewByRoomBackButton);
+		
+		JPanel viewReservationByRoomPANEL = new JPanel(new BorderLayout());
+		viewReservationByRoomPANEL.add(viewByRoomPanel, BorderLayout.CENTER);
 		viewReservationByRoomPANEL.add(viewByRoomButtonPanel, BorderLayout.SOUTH);
 	
 	// MVC - VIEW RESERVATION BY DATE
-		//ReservationsByDatePanel reservationsByDatePanel = new ReservationsByDatePanel();
-		
-		
-		
 		CalendarModel calendar = new CalendarModel(days, allRoomNumbers);
 		CalendarPanel calendarMainPanel = new CalendarPanel(calendar);
 		calendar.attach(calendarMainPanel);
 		
-		JPanel calendarBottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		JPanel calendarBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JButton calendarBackButton = new JButton ("Back");
 		calendarBottomPanel.add(calendarBackButton);
 		
@@ -216,9 +240,15 @@ public class HotelSystem extends JFrame{
 		});
 		
 		
+
 		loadReservationsButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				System.out.println("TO DO: link to load reservation");
+			public void actionPerformed(ActionEvent e) {
+				if(loadStatus == true)
+					status.setText("Reservation Loaded");
+				else{
+					status.setText("Done Loading");
+					reverseStatus();
+				}
 			}
 		});
 		
@@ -315,13 +345,23 @@ public class HotelSystem extends JFrame{
 		});
 		
 		
+		
+		
+		managerBackButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				status.setText("");
+				cardLayout.show(pages, "mainMenu");
+			}
+		});
+		
+		addListenerResetstatusLabel(viewReserveByDateButton, "viewByDATE", status);
+		addListenerResetstatusLabel(viewReserveByRoomButton, "viewByROOM", status);
+		
 	// ADD ACTIONLISTENER to each button to flip through different pages
 		addListenerToFlipPage(managerButton,"managerMenu");
-		addListenerToFlipPage(managerBackToMainMenuButton,"mainMenu");
-		addListenerToFlipPage(guestBackToMainMenuButton,"mainMenu");
+		//addListenerToFlipPage(managerBackButton,"mainMenu");
+		addListenerToFlipPage(guestBackButton,"mainMenu");
 		addListenerToFlipPage(guestButton, "guestMenu");
-		addListenerToFlipPage(viewReserveByRoomButton, "viewByROOM");
-		addListenerToFlipPage(viewReserveByDateButton, "viewByDATE");
 		addListenerToFlipPage(existingGuestButton,"signIn");
 		addListenerToFlipPage(newGuestButton,"signUp");
 		addListenerToFlipPage(bookingButton, "guestBooking");
@@ -390,4 +430,21 @@ public class HotelSystem extends JFrame{
     }
     
 	
+    private void reverseStatus(){
+    	loadStatus = !loadStatus;
+    }
+   
+    private void addListenerResetstatusLabel(JButton button, String nextPage, JLabel status){
+    	button.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				if(loadStatus == false)
+					status.setText("Reservations are not loaded");
+				else{
+					status.setText("");
+					cardLayout.show(pages, nextPage);
+				}
+				
+			}
+		});
+    }
 }

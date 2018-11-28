@@ -1,5 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.Hashtable;
 
 import javax.swing.JLabel;
@@ -11,15 +13,21 @@ public class SignUp extends JPanel{
 	private JLabel nameErrorLabel;
 	private JLabel usernameErrorLabel;
 	private JLabel passwordErrorLabel;
-	private JLabel existingAccountErrorLabel;
+	private JLabel warningLabel;
 	private JTextField nameTextField;
 	private JTextField usernameTextField;
 	private JTextField passwordTextField;
 	
 	public SignUp(Hashtable g){
+		setLayout(new GridBagLayout());
+		
+	    // GRIDBAG CONSTRAINT
+    	GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        
 		guests = g;
 		
-		JLabel label = new JLabel("SIGN UP");
 		
 		JLabel nameLabel = new JLabel("Full Name");
 		JLabel usernameLabel = new JLabel("Username");
@@ -27,43 +35,47 @@ public class SignUp extends JPanel{
 		nameErrorLabel = new JLabel("");
 		usernameErrorLabel = new JLabel("");
 		passwordErrorLabel = new JLabel("");
-		existingAccountErrorLabel = new JLabel("");
+		warningLabel = new JLabel("");
 		nameTextField =  new JTextField();
 		usernameTextField =  new JTextField();
 		passwordTextField = new JTextField();
 		
-		Dimension dimension = new Dimension(110, 30);
+		
+		
+		Dimension dimension = new Dimension(125, 30);
 		
 		nameTextField.setPreferredSize(dimension);
 		usernameTextField.setPreferredSize(dimension);
 		passwordTextField.setPreferredSize(dimension);
 		
 		
-		existingAccountErrorLabel.setForeground(Color.RED);
-		usernameErrorLabel.setForeground(Color.RED);
-		passwordErrorLabel.setForeground(Color.RED);
-		nameErrorLabel.setForeground(Color.RED);
+		warningLabel.setForeground(Color.RED);
 		
-		add(label);
-		add(nameLabel);
-		add(nameTextField);
-		add(nameErrorLabel);
-		add(usernameLabel);
+		JPanel namePanel = new JPanel();
+		JPanel usernamePanel = new JPanel();
+		JPanel passwordPanel = new JPanel();
+		JPanel errorPanel = new JPanel();
 		
-		add(usernameTextField);
-		add(usernameErrorLabel);
-		add(passwordLabel);
-		add(passwordTextField);
-		add(passwordErrorLabel);
-		add(existingAccountErrorLabel);
+		namePanel.add(nameLabel);
+		namePanel.add(nameTextField);
 		
+		usernamePanel.add(usernameLabel);
+		usernamePanel.add(usernameTextField);
+		
+		passwordPanel.add(passwordLabel);
+		passwordPanel.add(passwordTextField);
+		
+		errorPanel.add(warningLabel);
+		
+		add(namePanel, gbc);
+		add(usernamePanel, gbc);
+		add(passwordPanel, gbc);
+		add(warningLabel, gbc);
 		
 	}
 	
 	public Guest createAccount(){
-		existingAccountErrorLabel.setText("");
-		usernameErrorLabel.setText("");
-		passwordErrorLabel.setText("");
+		warningLabel.setText("");
 		
 		String name = nameTextField.getText().trim();
 		String username = usernameTextField.getText().trim();
@@ -71,14 +83,14 @@ public class SignUp extends JPanel{
 		
 		
 		if(name.equals("") || username.equals("") || password.equals("")){
-			existingAccountErrorLabel.setText("Name, username or password cannot be empty");
+			warningLabel.setText("Name, username or password cannot be empty");
 			return null;
 		}
 		
 		Guest guest = (Guest)guests.get(username);
 		
 		if(guest != null){
-			usernameErrorLabel.setText("This username already exists");
+			warningLabel.setText("This username already exists");
 			return null;
 		}
 		
