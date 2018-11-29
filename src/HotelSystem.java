@@ -19,8 +19,8 @@ public class HotelSystem extends JFrame{
 	private Hashtable categorizedRooms;
 	private Hashtable roomsByHashtable;
     private CardLayout cardLayout;
-    private JPanel pages;
-    private ArrayList<Day> days;
+    private JPanel pages; // hold all "Pages"
+    private ArrayList<Day> days; // Hold reservations & available rooms for each day
     private ArrayList<Integer> allRoomNumbers;
     private boolean loadStatus;
     
@@ -203,11 +203,19 @@ public class HotelSystem extends JFrame{
 		
 		
 	// JPANEL DISPLAY RECEIPT - general for both simple & comprehensive
-		Receipt receiptPanel = new Receipt();
+		Receipt receipt = new Receipt();
+		JScrollPane receiptScroll = new JScrollPane(receipt, 
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JButton receiptDoneButton = new JButton("Exit");
 		JButton receiptBackButton = new JButton("Back");
-		receiptPanel.add(receiptDoneButton);
-		receiptPanel.add(receiptBackButton);
+		JPanel receiptPanel = new JPanel(new BorderLayout());
+		JPanel receiptButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		receiptButtonPanel.add(receiptBackButton);
+		receiptButtonPanel.add(receiptDoneButton);
+		receiptPanel.add(receiptScroll, BorderLayout.CENTER);
+		receiptPanel.add(receiptButtonPanel, BorderLayout.SOUTH);
+		
 		
 		
 	// PANEL to hold all PAGES
@@ -316,16 +324,16 @@ public class HotelSystem extends JFrame{
 				Reservation r = bookingConfirmsPanel.getNewReservation();
 				if(r != null)
 					res.add(r);
-				receiptPanel.setGuestReservations(res);
-				receiptPanel.printReceipt(new SimpleFormatter());
+				receipt.setGuestReservations(res);
+				receipt.printReceipt(new SimpleFormatter());
 				cardLayout.show(pages, "receiptPanel");
 			}
 		});
 		
 		comprehensiveFormatButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				receiptPanel.setGuestReservations(guestReservations.getGuestReservations());
-				receiptPanel.printReceipt(new ComprehensiveFormatter());
+				receipt.setGuestReservations(guestReservations.getGuestReservations());
+				receipt.printReceipt(new ComprehensiveFormatter());
 				cardLayout.show(pages, "receiptPanel");
 			}
 		});
@@ -359,7 +367,6 @@ public class HotelSystem extends JFrame{
 		
 	// ADD ACTIONLISTENER to each button to flip through different pages
 		addListenerToFlipPage(managerButton,"managerMenu");
-		//addListenerToFlipPage(managerBackButton,"mainMenu");
 		addListenerToFlipPage(guestBackButton,"mainMenu");
 		addListenerToFlipPage(guestButton, "guestMenu");
 		addListenerToFlipPage(existingGuestButton,"signIn");

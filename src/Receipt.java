@@ -4,6 +4,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+/**
+ * JPanel display content of the receipt
+ * @author Ngan Nguyen
+ *
+ */
 public class Receipt extends JPanel{
 	private ArrayList<Reservation> guestReservations;
 	private JTextArea textArea;
@@ -11,15 +16,25 @@ public class Receipt extends JPanel{
 	
 	public Receipt(){
 		textArea = new JTextArea();
+		textArea.setOpaque(false);
+		textArea.setEditable(false);
 		add(textArea);
 	}
 	
+	/**
+	 * print receipt content
+	 * @param formatter
+	 */
 	public void printReceipt(ReceiptFormatter formatter){
 		String s= formatter.formatHeader() + formatter.formatReservation(guestReservations) 
 			+ formatter.formatFooter();
 		textArea.setText(s);
 	}
 	
+	/**
+	 * Update guestReservations with the most receipt one
+	 * @param reservations
+	 */
 	public void setGuestReservations(ArrayList<Reservation> reservations){
 		guestReservations = reservations;
 	}

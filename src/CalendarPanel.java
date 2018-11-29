@@ -8,7 +8,11 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 
 
-
+/**
+ * 
+ * @author Sharon, Ngan
+ *
+ */
 public class CalendarPanel extends JPanel implements ChangeListener{
 
 	public enum DAYS {

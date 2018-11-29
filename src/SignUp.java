@@ -8,11 +8,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * 
+ * @author Ngan Nguyen
+ *
+ */
 public class SignUp extends JPanel{
 	private Hashtable guests;
-	private JLabel nameErrorLabel;
-	private JLabel usernameErrorLabel;
-	private JLabel passwordErrorLabel;
 	private JLabel warningLabel;
 	private JTextField nameTextField;
 	private JTextField usernameTextField;
@@ -32,15 +34,10 @@ public class SignUp extends JPanel{
 		JLabel nameLabel = new JLabel("Full Name");
 		JLabel usernameLabel = new JLabel("Username");
 		JLabel passwordLabel = new JLabel("Password");
-		nameErrorLabel = new JLabel("");
-		usernameErrorLabel = new JLabel("");
-		passwordErrorLabel = new JLabel("");
 		warningLabel = new JLabel("");
 		nameTextField =  new JTextField();
 		usernameTextField =  new JTextField();
 		passwordTextField = new JTextField();
-		
-		
 		
 		Dimension dimension = new Dimension(125, 30);
 		

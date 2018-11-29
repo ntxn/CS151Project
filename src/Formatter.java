@@ -1,17 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
- * @author sarahmai
+ * @author Sarah Mai, Ngan Nguyen
  */
 public abstract class Formatter implements ReceiptFormatter
 {
-	//public Formatter(){}
+    protected int total;	// total price of booking(s)
+	
     public String formatHeader()
     {
-        return "Receipt Header";
+        return "RECEIPT\n\n";
+    }
+    
+
+    public String formatFooter()
+    {
+        return (String.format("\n\nTOTAL DUE: $%d\n", total));
     }
 }

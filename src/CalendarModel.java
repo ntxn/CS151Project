@@ -6,6 +6,11 @@ import java.util.GregorianCalendar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * 
+ * @author Sharon, Ngan
+ *
+ */
 public class CalendarModel{
 
 	private int maxDays;

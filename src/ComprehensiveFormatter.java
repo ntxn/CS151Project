@@ -1,11 +1,7 @@
 import java.util.ArrayList;
 
 public class ComprehensiveFormatter extends Formatter{
-
-	//how many rooms booked total
-    private double total;
-    
-    public String formatReservation(ArrayList<Reservation> reservations)
+	public String formatReservation(ArrayList<Reservation> reservations)
     {
     	if(reservations !=null){
     	String s = "";
@@ -17,12 +13,6 @@ public class ComprehensiveFormatter extends Formatter{
     		return s;
     	}
     	
-        return "No Reservation";
+        return "\nNo Reservation\n";
     }
-    
-    public String formatFooter()
-    {
-        return (String.format("\n\nTOTAL DUE: $%.2f\n", total));
-    }
-
 }
