@@ -5,15 +5,18 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 /**
+ * STRATEGY PATTERN
  * JPanel display content of the receipt
  * @author Ngan Nguyen
  *
  */
 public class Receipt extends JPanel{
-	private ArrayList<Reservation> guestReservations;
-	private JTextArea textArea;
+	private ArrayList<Reservation> guestReservations;	// 1 guest's reservations
+	private JTextArea textArea;	// to display receipt
 	
-	
+	/**
+	 * constructor to initialize textArea
+	 */
 	public Receipt(){
 		textArea = new JTextArea();
 		textArea.setOpaque(false);
@@ -23,7 +26,7 @@ public class Receipt extends JPanel{
 	
 	/**
 	 * print receipt content
-	 * @param formatter
+	 * @param formatter an instance of concrete ReceiptFormatter
 	 */
 	public void printReceipt(ReceiptFormatter formatter){
 		String s= formatter.formatHeader() + formatter.formatReservation(guestReservations) 

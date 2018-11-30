@@ -7,22 +7,25 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * 
- * @author Sharon, Ngan
+ * MODEL for MVC VIEW reservations BY DATE
+ * @author En-Ping Shih, Ngan Nguyen
  *
  */
 public class CalendarModel{
-
-	private int maxDays;
-	private int selectedDay;
-	private ArrayList<ChangeListener> listeners;
+	private int maxDays;	// maximum number of days in the current month
+	private int selectedDay;	// the day clicked on the calendar UI
+	private ArrayList<ChangeListener> listeners;	//Data structure for listeners
 	private GregorianCalendar cal;
-	private boolean monthChanged;
-	private ArrayList<Day> days;
-	private ArrayList<Integer> allRoomNumbers;
+	private boolean monthChanged;	
+	private ArrayList<Day> days;	// Data structure for data of the model
+									// hold reservations for each day 
+									// if it has a reservation
+	private ArrayList<Integer> allRoomNumbers;	// integer version of room inventory
+	private String allRooms;
 	
 	/**
 	 * Constructor
+	 * It takes ArrayList<Day> & ArrayList<Integer> loaded from text file
 	 */
 	public CalendarModel(ArrayList<Day> days, ArrayList<Integer> allRoomNumbers) {
 		listeners = new ArrayList<ChangeListener>();
@@ -32,8 +35,12 @@ public class CalendarModel{
 		selectedDay = cal.get(Calendar.DATE);
 		this.days = days;
 		this.allRoomNumbers = allRoomNumbers;
+		allRooms = getAllRooms();
 	}
 	
+	/**
+	 * reset info of the Calendar to the current date
+	 */
 	public void reset(){
 		cal = new GregorianCalendar();
 		monthChanged = false;
@@ -50,7 +57,8 @@ public class CalendarModel{
 	}
 	
 	/**
-	 * Updates all ChangeListeners in array.
+	 * Updates all ChangeListeners in array. 
+	 * Notify view of the changes
 	 */
 	private void update() {
 		for (ChangeListener l : listeners) {
@@ -146,7 +154,11 @@ public class CalendarModel{
 	}
 	
 	
-
+	/**
+	 * get index of d in the array days, if exists
+	 * @param d
+	 * @return return index or -1
+	 */
 	private int getDateIndex(LocalDate d){
 		for(int i = 0; i<days.size(); i++)
 			if(d.equals(days.get(i).getDate()))
@@ -155,12 +167,17 @@ public class CalendarModel{
 		return -1;
 	}
 	
+	/**
+	 * gather all available rooms & booked rooms on a day
+	 * @return concatenated string of those info
+	 */
 	public String printRooms(){
-		
+		// get LocalDate of the clicked date on the calendar
 		LocalDate date = LocalDate.of(getCurrentYear(), getCurrentMonth() +1, selectedDay);
-		int index = getDateIndex(date);
+		int index = getDateIndex(date);	// get index of this date in days
 		
-		if(index != -1){
+		// if this date exists in the array, print info from the Day
+		if(index != -1){	
 			Day d = days.get(index);
 			String str = "Available Room: \n";
 			int base = 100;
@@ -178,8 +195,17 @@ public class CalendarModel{
 			return str;
 		}
 		
+		//else return all room numbers
+		return allRooms;
+	}
+	
+	/**
+	 * concatenate all the room number into a string
+	 * @return
+	 */
+	private String getAllRooms(){
 		String str = "Available Room:\n";
-		
+				
 		for(int i : allRoomNumbers){
 			str += i + "\t";
 			if(i%4 == 0){
@@ -189,7 +215,11 @@ public class CalendarModel{
 		return str;
 	}
 	
-	
+	/**
+	 * remove reservation r from all the Days that contains it
+	 * and add the room to the available room list
+	 * @param r
+	 */
 	public void removeReservation(Reservation r){
 		DateInterval dateInterval = r.getDateInterval();
 		LocalDate date = dateInterval.getStart_date();
@@ -209,6 +239,7 @@ public class CalendarModel{
 	
 	/**
 	 * Add reservation to each day in the calendar
+	 * and remove the room number from the available room list
 	 * @param r
 	 */
 	public void addReservation(Reservation r){

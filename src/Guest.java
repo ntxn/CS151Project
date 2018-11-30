@@ -69,7 +69,13 @@ public class Guest {
 		this.password = password;
 	}
 	
-	public boolean isEqual(Guest g){
+	/**
+	 * compare this guest info to another guest
+	 * to see if there's the sanme
+	 * @param g
+	 * @return true/false
+	 */
+	public boolean equal(Guest g){
 		if(name.equals(g.getName()) && username.equals(g.getUsername())
 				&& password.equals(g.getPassword()))
 				return true;

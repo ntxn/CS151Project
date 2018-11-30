@@ -11,6 +11,8 @@ import javax.swing.event.*;
 
 /**
  * VIEW & CONTROLLER 2 for MVC Make A Reservation
+ * Get the booking info (start date, end date, room price)
+ * to display available rooms
  * @author Ngan Nguyen
  *
  */
@@ -34,7 +36,8 @@ public class BookingInfoPanel extends JPanel implements ChangeListener{
 		roomType = 0;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));		
 		
-		// CHECK-IN - CHECK-OUT JPANEL
+		// CONTROLLER - GUI
+		// CHECK-IN - CHECK-OUT Dates JPANEL
 		JLabel start_date_label = new JLabel("Check In (MM/DD/YYYY)   ");
 		JLabel end_date_label = new JLabel("Check Out (MM/DD/YYYY)");
 		
@@ -58,7 +61,7 @@ public class BookingInfoPanel extends JPanel implements ChangeListener{
 		end_date_panel.add(end_date_error_label);
 		
 		
-		
+		// CONTROLLER - GUI
 		// JPanel with room type BUTTONS
 		JPanel roomTypeButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		int base = 100;
@@ -77,11 +80,10 @@ public class BookingInfoPanel extends JPanel implements ChangeListener{
 		roomTypeButtonsPanel.add(button_error);
 		
 		
-		
 		JPanel availableRoomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		
 		
-		// CONTROLER ADD changes to data model
+		// CONTROLER - listener Part - ADD changes to data model
 		JButton showRooms = new JButton("Show Available Rooms");
 		showRooms.setAlignmentX(LEFT_ALIGNMENT);
 		showRooms.addActionListener(new ActionListener(){
@@ -131,7 +133,7 @@ public class BookingInfoPanel extends JPanel implements ChangeListener{
 	
 	
 	/**
-	 * VIEW Respond to data model changes
+	 * VIEW - LISTENER Part - Respond to data model changes
 	 */
 	public void stateChanged(ChangeEvent e){
 		dataModel = (BookingModel) e.getSource();

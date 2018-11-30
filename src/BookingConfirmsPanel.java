@@ -11,15 +11,16 @@ import javax.swing.event.ChangeListener;
 
 /**
  * VIEW & CONTROLLER 1 for MVC Make A Reservation
+ * Get the room number from guest & process the reservation
  * @author Ngan Nguyen
  *
  */
 public class BookingConfirmsPanel extends JPanel implements ChangeListener{
-	private BookingModel dataModel;
-	private JTextField getRoomTextField;
-	private JLabel confirmationLabel;
+	private BookingModel dataModel; 
+	private JTextField getRoomTextField;// hold the room number chosen by guest
+	private JLabel confirmationLabel;	// display confirmation if booking successful
 	private int roomNumber;
-	private Reservation newReservation;
+	private Reservation newReservation;	// hold newly made Reservation
 	
 	
 	/**
@@ -80,7 +81,7 @@ public class BookingConfirmsPanel extends JPanel implements ChangeListener{
 	}
 
 	/**
-	 * VIEW SET WHAT TO DO WITH THE NEW INFO
+	 * VIEW LISENER Part - WHAT TO DO WITH THE NEW INFO
 	 */
 	@Override
 	public void stateChanged(ChangeEvent e) {
@@ -115,6 +116,10 @@ public class BookingConfirmsPanel extends JPanel implements ChangeListener{
 		getRoomTextField.setText("");
 	}
 	
+	/**
+	 * get the new booking
+	 * @return the new booking
+	 */
 	public Reservation getNewReservation(){
 		return newReservation;
 	}

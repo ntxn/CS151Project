@@ -8,7 +8,9 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 /**
- * 
+ * The main frame of the program.
+ * It holds and connect all other panels
+ * to make a complete program
  * @author Ngan Nguyen
  *
  */
@@ -22,9 +24,21 @@ public class HotelSystem extends JFrame{
     private JPanel pages; // hold all "Pages"
     private ArrayList<Day> days; // Hold reservations & available rooms for each day
     private ArrayList<Integer> allRoomNumbers;
-    private boolean loadStatus;
+    private boolean loadStatus; //Load data status
     
-    
+    /**
+     * Constructor to initialize variables, make hotelSystem instance
+     * action listener ready, create objects of other panels 
+     * and connect them together by CardLayout JPanel
+     * All parameters are loaded from text files in the tester
+     * @param guests 
+     * @param reservations
+     * @param rooms
+     * @param catagorizedRooms
+     * @param roomsByHashtable
+     * @param days
+     * @param allRoomNumbers
+     */
     public HotelSystem(Hashtable guests, ArrayList<Reservation> reservations,
     		ArrayList<Room> rooms, Hashtable catagorizedRooms, Hashtable roomsByHashtable,
     		ArrayList<Day> days,  ArrayList<Integer> allRoomNumbers){
@@ -38,7 +52,7 @@ public class HotelSystem extends JFrame{
     	this.days = days;
     	this.allRoomNumbers = allRoomNumbers;
     	loadStatus = false;
-    	JLabel status = new JLabel();
+    	
     	
     	
     // GRIDBAG CONSTRAINT
@@ -54,6 +68,7 @@ public class HotelSystem extends JFrame{
 		mainMenu.add(managerButton, new GridBagConstraints());
 		
 	// MANAGER MENU
+		JLabel status = new JLabel();
 		JPanel managerMenu = new JPanel(new GridBagLayout());
 		JPanel viewRoomPanel = new JPanel();
 		JButton viewReserveByRoomButton = new JButton("View Reservations By Room");
@@ -164,8 +179,6 @@ public class HotelSystem extends JFrame{
 		
 		// DONE button to go to view receipt page
 		JButton doneButton = new JButton("Done");
-		
-		
 		JPanel endReservationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		endReservationPanel.add(moreReservation);
 		endReservationPanel.add(doneButton);
@@ -177,8 +190,9 @@ public class HotelSystem extends JFrame{
 		bookingPanel.add(endReservationPanel, BorderLayout.SOUTH);
 		
 		
-	//VIEW/CANCEL RESERVATIONS BY GUEST
-		GuestReservations guestReservations = new GuestReservations(reservations, calendar);
+	//VIEW-CANCEL RESERVATIONS BY GUEST
+		GuestReservations guestReservations = 
+				new GuestReservations(reservations, calendar);
 		// Add a scroll
 		JScrollPane scroll = new JScrollPane(guestReservations, 
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
@@ -187,12 +201,15 @@ public class HotelSystem extends JFrame{
 		
 		
 		JButton guestReservations_QUIT_Button = new JButton("Quit");
-		JPanel guestReservationsButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		JPanel guestReservationsButtonPanel = 
+				new JPanel(new FlowLayout(FlowLayout.CENTER));
 		guestReservationsButtonPanel.add(guestReservations_QUIT_Button);
 		
 		JPanel guestReservationsPanel = new JPanel(new BorderLayout());
 		guestReservationsPanel.add(scroll, BorderLayout.CENTER);
-		guestReservationsPanel.add(guestReservationsButtonPanel, BorderLayout.SOUTH);
+		guestReservationsPanel.add(guestReservationsButtonPanel, 
+				BorderLayout.SOUTH);
+		
 
 	// RECEIPT FORMAT OPTIONS
 		JPanel receiptFormatOptionsPanel  = new JPanel(new GridBagLayout());
@@ -203,6 +220,7 @@ public class HotelSystem extends JFrame{
 		
 		
 	// JPANEL DISPLAY RECEIPT - general for both simple & comprehensive
+		// FOR STRATEGY Pattern
 		Receipt receipt = new Receipt();
 		JScrollPane receiptScroll = new JScrollPane(receipt, 
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
@@ -238,6 +256,8 @@ public class HotelSystem extends JFrame{
 		
 		
 	// ADD ACTIONLISTENER to button with different responsibility
+		//export guest info & reservations to text files
+		//and close frame
 		quitProgramButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				// Export data & quit
@@ -248,7 +268,7 @@ public class HotelSystem extends JFrame{
 		});
 		
 		
-
+		//display loading status of text files
 		loadReservationsButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				if(loadStatus == true)
@@ -260,7 +280,7 @@ public class HotelSystem extends JFrame{
 			}
 		});
 		
-		
+		// verify log in into, if connect, move to menu for guest
 		signInButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				Guest guest = signInPanel.verifyAccount();
@@ -272,7 +292,7 @@ public class HotelSystem extends JFrame{
 			}
 		});
 		
-		
+		// verify sign up info, if eligible, move to menu for guest
 		signUpButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				Guest guest = signUpPanel.createAccount();
@@ -284,7 +304,7 @@ public class HotelSystem extends JFrame{
 			}
 		});
 		
-		
+		// go to panel to display all guest's reservations
 		viewCancelReservationButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				guestReservations.setReservations(reservations);
@@ -293,6 +313,7 @@ public class HotelSystem extends JFrame{
 			}
 		});
 		
+		// return to main menu, clear guestReservations panel
 		guestReservations_QUIT_Button.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				bookingModel.setCurrentGuest(null);
@@ -301,6 +322,7 @@ public class HotelSystem extends JFrame{
 			}
 		});
 		
+		// reset current guest & return to main menu
 		receiptDoneButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				bookingModel.setCurrentGuest(null);
@@ -308,7 +330,8 @@ public class HotelSystem extends JFrame{
 			}
 		});
 		
-		
+		// reset booking info fields & let guest choose which receipt 
+		// they want to see
 		doneButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				bookingConfirmsPanel.resetFields();
@@ -317,7 +340,7 @@ public class HotelSystem extends JFrame{
 			}
 		});
 		
-		
+		// display simple receipt with the current booking if any
 		simpleFormatButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				ArrayList<Reservation> res = new ArrayList<Reservation>();
@@ -330,6 +353,7 @@ public class HotelSystem extends JFrame{
 			}
 		});
 		
+		// display receipt of all bookings of a guest
 		comprehensiveFormatButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				receipt.setGuestReservations(guestReservations.getGuestReservations());
@@ -338,6 +362,7 @@ public class HotelSystem extends JFrame{
 			}
 		});
 		
+		// back to manager menu from VIEW BY ROOM
 		viewByRoomBackButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				viewByRoomPanel.resetFields();
@@ -345,6 +370,7 @@ public class HotelSystem extends JFrame{
 			}
 		});
 		
+		// back to manager menu from VIEW BY DATE
 		calendarBackButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				calendarMainPanel.resetFields();
@@ -352,9 +378,7 @@ public class HotelSystem extends JFrame{
 			}
 		});
 		
-		
-		
-		
+		// back to main menu from manager menu
 		managerBackButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				status.setText("");
@@ -378,9 +402,11 @@ public class HotelSystem extends JFrame{
 		add(pages);
     }
     
-    
-   
-    
+    /**
+     * add listener to button so that it can move to another panel
+     * @param button
+     * @param nextPage
+     */
     private void addListenerToFlipPage(JButton button, String nextPage){
     	button.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -389,11 +415,39 @@ public class HotelSystem extends JFrame{
 		});
     }
     
+    /**
+     * Add listener to a button based on loadStatus value
+     * @param button
+     * @param nextPage
+     * @param status
+     */
+    private void addListenerResetstatusLabel(JButton button, 
+    		String nextPage, JLabel status){
+    	button.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				if(loadStatus == false)
+					status.setText("Reservations are not loaded");
+				else{
+					status.setText("");
+					cardLayout.show(pages, nextPage);
+				}
+				
+			}
+		});
+    }
     
+    /**
+     * Close this frame
+     */
     private void closeFrame(){
     	super.dispose();
     }
     
+    /**
+     * export reservations & guest info to text files
+     * @param dataType 1 for reservation or 2 for guest
+     * @param filename
+     */
     private void exportData(int dataType, String filename){
     	BufferedWriter writer = null;
         try {
@@ -436,22 +490,12 @@ public class HotelSystem extends JFrame{
         }
     }
     
-	
+	/**
+	 * reverse status of loadStatus variable
+	 */
     private void reverseStatus(){
     	loadStatus = !loadStatus;
     }
    
-    private void addListenerResetstatusLabel(JButton button, String nextPage, JLabel status){
-    	button.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				if(loadStatus == false)
-					status.setText("Reservations are not loaded");
-				else{
-					status.setText("");
-					cardLayout.show(pages, nextPage);
-				}
-				
-			}
-		});
-    }
+    
 }

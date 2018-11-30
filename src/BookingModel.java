@@ -10,7 +10,7 @@ import javax.swing.event.*;
  *
  */
 public class BookingModel {
-	private ArrayList<Reservation> all_reservations;
+	private ArrayList<Reservation> reservations;
 	private ArrayList<Integer> availableRoomsByType;
 	private ArrayList<ChangeListener> listeners;	// Data structure to hold listeners
 	private ArrayList<Room> allRoomsByType; // 1 ArrayList of rooms by 1 chosen price, 
@@ -21,7 +21,7 @@ public class BookingModel {
 	private Hashtable rooms;		// All rooms in the hotel
 	private int roomType;			// Hold the type of the room that guest chooses
 	private int charge;				// Total charge for the booking
-	private CalendarModel calendar;
+	private CalendarModel calendar; // to access to the ArrayList<Day>
 	
 	
 	/**
@@ -34,7 +34,7 @@ public class BookingModel {
 	public BookingModel(ArrayList<Reservation> reservations,
 			Hashtable catagorizedRooms, Hashtable rooms, CalendarModel c){
 		listeners = new ArrayList<ChangeListener>();
-		this.all_reservations = reservations;
+		this.reservations = reservations;
 		allRoomsByType = new ArrayList<Room>();
 		availableRoomsByType = new ArrayList<Integer>();
 		this.categorizedRooms = catagorizedRooms;
@@ -76,8 +76,8 @@ public class BookingModel {
 		Hashtable bookedRoom = new Hashtable();
 		
 		// Get all rooms that are booked during that DateInterval
-		for(int i=0; i<all_reservations.size(); i++){
-			reservation = all_reservations.get(i);
+		for(int i=0; i<reservations.size(); i++){
+			reservation = reservations.get(i);
 			if(reservation.getDateInterval().isConflicting(this.dateInterval))
 				if(reservation.getRoom().getPrice() == roomType)
 					bookedRoom.put(reservation.getRoom().getRoom_number(), roomType); 
@@ -107,7 +107,7 @@ public class BookingModel {
 		charge = roomType*dateInterval.getNumberOfDays();
 		Reservation r = new Reservation(currentGuest, (Room)rooms.get(room_number), dateInterval, 
 				charge, LocalDate.now());
-		all_reservations.add(r); 
+		reservations.add(r); 
 		calendar.addReservation(r);
 		ChangeEvent event = new ChangeEvent(this);
 		listeners.get(1).stateChanged(event);

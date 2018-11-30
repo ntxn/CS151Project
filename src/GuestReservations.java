@@ -23,7 +23,7 @@ public class GuestReservations extends JPanel{
 	private ArrayList<Reservation> reservations; 
 	private ArrayList<Integer> originalIndexes;
 	private JPanel cancelConfirmationPanel;
-	private ArrayList<JButton> buttons;
+	private ArrayList<JButton> buttons; // buttons for each reservation to cancel
 	private Guest currentGuest;
 	private CalendarModel calendar;
 	
@@ -76,7 +76,7 @@ public class GuestReservations extends JPanel{
 	private void generateGuestReservations(){
 		guestReservations.clear();
 		for(int i = 0; i<reservations.size(); i++)
-			if(reservations.get(i).getGuest().isEqual(currentGuest))
+			if(reservations.get(i).getGuest().equal(currentGuest))
 				addReservation(reservations.get(i), i);
 	}
 	
@@ -101,8 +101,6 @@ public class GuestReservations extends JPanel{
 		guestReservations.add(i, r);
 		originalIndexes.add(i, index);
 	}
-	
-	
 	
 	
 	
@@ -220,6 +218,9 @@ public class GuestReservations extends JPanel{
 		}
 	}
 	
+	/**
+	 * clear data/text on Panels
+	 */
 	public void clearPanel(){
 		// Clear all existing components on the main Panel
 		removeAll();

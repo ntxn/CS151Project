@@ -9,8 +9,8 @@ import javax.swing.event.*;
 
 
 /**
- * 
- * @author Sharon, Ngan
+ * CONTROLLER & VIEW of MVC View Reservations By Date
+ * @author En-Ping Shih, Ngan Nguyen
  *
  */
 public class CalendarPanel extends JPanel implements ChangeListener{
